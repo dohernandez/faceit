@@ -1,0 +1,16 @@
+.git
+.github
+
+# Dependency directories (remove the comment below to include it)
+/*.coverprofile
+#/.vscode
+#/bench-*.txt
+
+.env
+.env.*
+.gitignore
+*.yml
+*.md
+Dockerfile*
+
+
