@@ -11,16 +11,15 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
   info: {
     title: "faceit"
     version: "1.0"
-    description: "Short description of the service"
+    description: "faceit is small microservice to manage Users."
   }
   schemes: HTTP;
   consumes: "application/json"
   produces: "application/json"
-  /*
   responses: {
     key: "400"
     value: {
-      description: "Short description of the general 400 error.";
+      description: "Bad Request.";
       schema: {
         json_schema: {
           ref: ".google.rpc.Status"
@@ -39,36 +38,39 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
       }
     }
   }
-  */
 };
 
-// The API manages ... .
+// The API to manages users.
 service FaceitService {
-/*
-  // PostFuncName ... .
+  // AddUser add new user.
   //
-  // Receives a request with ... . Responses ... .
-  rpc PostFuncName(PostFuncRequest) returns (PostFuncResponse) {
+  // Receives a request with user data. Responses whether the user was added successfully or not.
+  rpc AddUser(AddUserRequest) returns (AddUserResponse) {
     // Client example (Assuming the service is hosted at the given 'DOMAIN_NAME'):
     // Client example:
-    //   curl -d '{}' http://DOMAIN_NAME/v1/resource/name
+    //   curl -d '{"first_name": "Alice", "last_name": "Bob", "nickname": "AB123", "password_hash": "supersecurepassword", "email": "alice@bob.com", "country": "UK"}' http://DOMAIN_NAME/v1/users
     option (google.api.http) = {
-      post : "/v1/resource/name"
+      post : "/v1/users"
       body : "*"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       responses: {
-        key: "200"
+        key: "201"
         value: {
           examples: {
             key: "application/json"
-            value: '{}'
+            value: '{"id": "26ef0140-c436-4838-a271-32652c72f6f2"}'
+          }
+          schema: {
+            json_schema: {
+              ref: ".api.faceit.AddUserResponse"
+            }
           }
         }
       }
     };
   }
-
+/*
   // GetFuncName.
   //
   // Receives a request with ... . Responses ... .
@@ -106,38 +108,44 @@ service FaceitService {
         }
       }
     };
-  }
+  }*/
 }
 
-message PostFuncRequest {
+message AddUserRequest {
   option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
     json_schema: {
-      title: "PostFuncRequest"
-      description: "Request message to ... ."
-      required: []
+      title: "AddUserRequest"
+      description: "Request message to add new user."
+      required: ["first_name", "last_name", "nickname", "password_hash", "email", "country"]
     }
   };
 
-  // ... .
-  string postParam1 = 1;
-  // ... .
-  uint64 postParam2 = 2;
-  // ... .
-  repeated string postParam3 = 3;
+  // First name of the user.
+  string first_name = 1;
+  // Last name of the user.
+  string last_name = 2;
+  // Nickname of the user.
+  string nickname = 3;
+  // Password hash of the user.
+  string password_hash = 4;
+  // Email of the user.
+  string email = 5;
+  // Country of the user.
+  string country = 6;
 }
 
-message PostFuncResponse {
+message AddUserResponse {
   option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
     json_schema: {
-      title: "PostFuncResponse"
-      description: "Response message from ... ."
-      required: []
+      title: "AddUserResponse"
+      description: "Response message from user was added."
     }
   };
-  // ... .
-  string responseValue1 = 1;
+  // ID of the user.
+  string id = 1;
 }
 
+/*
 message GetFuncRequest {
   option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
     json_schema: {
@@ -173,5 +181,5 @@ message GetFuncResponse {
     // ... .
     int64 responseValue2 = 2;
   }
-*/
 }
+*/
