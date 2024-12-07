@@ -43,7 +43,7 @@ endif
 
 BUILD_LDFLAGS="-s -w"
 BUILD_PKG = ./cmd/...
-BINARY_NAME = kit-template
+BINARY_NAME = faceit
 
 
 -include $(DEVSERVICEGO_PATH)/makefiles/dep.mk

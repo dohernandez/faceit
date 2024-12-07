@@ -1,4 +1,4 @@
-# Kit Template Architecture
+# Faceit Architecture
 
 * Latest update: 2021-11-19
 

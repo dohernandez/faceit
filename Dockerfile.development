@@ -1,5 +1,5 @@
 FROM golang:1.23.3-bookworm
 
-WORKDIR /go/src/github.com/dohernandez/kit-template
+WORKDIR /go/src/github.com/dohernandez/faceit
 
 CMD make run-compile-daemon

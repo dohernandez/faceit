@@ -1,4 +1,4 @@
-module github.com/dohernandez/kit-template
+module github.com/dohernandez/faceit
 
 go 1.23.3
 

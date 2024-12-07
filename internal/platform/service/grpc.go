@@ -4,31 +4,31 @@ import (
 	"github.com/bool64/ctxd"
 )
 
-// KitTemplateServiceDeps holds the dependencies for the KitTemplateService.
-type KitTemplateServiceDeps interface {
+// FaceitServiceDeps holds the dependencies for the FaceitService.
+type FaceitServiceDeps interface {
 	Logger() ctxd.Logger
 	GRPCAddr() string
 }
 
-// KitTemplateService is the gRPC service.
-type KitTemplateService struct {
+// FaceitService is the gRPC service.
+type FaceitService struct {
 	// Uncomment this line once the grpc files were generated into the proto package.
-	// UnimplementedKitTemplateServiceServer must be embedded to have forward compatible implementations.
-	// api.UnimplementedKitTemplateServiceServer
+	// UnimplementedFaceitServiceServer must be embedded to have forward compatible implementations.
+	// api.UnimplementedFaceitServiceServer
 
-	deps KitTemplateServiceDeps
+	deps FaceitServiceDeps
 }
 
-// NewKitTemplateService creates a new KitTemplateService.
-func NewKitTemplateService(deps KitTemplateServiceDeps) *KitTemplateService {
-	return &KitTemplateService{
+// NewFaceitService creates a new FaceitService.
+func NewFaceitService(deps FaceitServiceDeps) *FaceitService {
+	return &FaceitService{
 		deps: deps,
 	}
 }
 
 /*
 // PostFuncName ... .
-func (s *KitTemplateService) PostFuncName(ctx context.Context, req interface{}) (interface{}, error) {
+func (s *FaceitService) PostFuncName(ctx context.Context, req interface{}) (interface{}, error) {
 	return nil, nil
 }
 */

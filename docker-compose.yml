@@ -1,7 +1,7 @@
 services:
   database-migrate:
     image: migrate/migrate
-    container_name: kittemplate-database-migrate
+    container_name: faceit-database-migrate
     volumes:
       - ./resources/migrations:/resources/migrations
     depends_on:
@@ -10,19 +10,19 @@ services:
     restart: on-failure
     command:
       - "-database"
-      - "postgres://kittemplate:kittemplate@database:5432/kittemplate?sslmode=disable"
+      - "postgres://faceit:faceit@database:5432/faceit?sslmode=disable"
       - "-path"
       - "/resources/migrations"
       - "up"
 
   database:
     image: postgres:17.2-alpine
-    container_name: kittemplate-database
+    container_name: faceit-database
     restart: always
     environment:
-      POSTGRES_PASSWORD: kittemplate
-      POSTGRES_USER: kittemplate
-      POSTGRES_DB: kittemplate
+      POSTGRES_PASSWORD: faceit
+      POSTGRES_USER: faceit
+      POSTGRES_DB: faceit
     ports:
       - "5432:5432"
     healthcheck:
