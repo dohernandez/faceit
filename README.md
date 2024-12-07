@@ -63,25 +63,13 @@ This command will generate the `.env` file from the `.env.template`. Make sure t
 After the `.env` file is generated, you can start the app by running
 
 ```shell
-docker-compose up -d
-```
-
-Since we are using the option `-d` make sure the service is up and running. Checks the logs of the services:
-
-```shell
-docker-compose logs -f app
-```
-
-The output should look something like this
-
-```shell
-echo "output of the logs" 
+make dc-up-dev
 ```
 
 To destroy the app run the command:
 
 ```shell
-docker-compose down -v
+make dc-down-dev
 ```
 
 [[table of contents]](#table-of-contents)
@@ -93,18 +81,18 @@ The service implements grpc based on the proto definition. The proto file with t
 To generate the go code based on the proto definition run the `make` command
 
 ```shell
-make proto-gen-code
+make proto-gen
 ```
 
-The Go files generated based on the command can be found `pkg/proto` folder.
+The Go files generated based on the command can be found `internal/platform/service/pb` folder.
 
 [[table of contents]](#table-of-contents)
 
 ### Testing
 
-The server follows unit testing. Unit testing make sure the logic of the application is sounds.
+The server follows unit testing and behavior testing. Testing make sure the logic of the application is sounds.
 
-Unit tests reside with the application source code, as per Golang recommendation. Use the command `make` command to run the tests:
+Unit tests reside with the application source code, as per Golang recommendation. Feature testing reside `[features](features)` folder. Use the command `make` command to run the tests:
 
 ```shell
 make test
@@ -118,7 +106,7 @@ make lint
 
 to make sure your changes follow our coding standards.
 
-**Note:** Integration testing is part of the future enhancement.
+[[table of contents]](#table-of-contents)
 
 #### Evans
 
@@ -164,10 +152,10 @@ The layout of the migration name should be as follows:
 ```
 <current-date-string>_<migration-name>.(up|down).sql
 
-Example (created in 2020-01-01 00:00:00):
+Example (created in 2024-01-01 00:00:00):
 
-    20200101000000_my_migration.up.sql
-    20200101000000_my_migration.down.sql
+    20240101000000_my_migration.up.sql
+    20240101000000_my_migration.down.sql
 ```
 
 For creating migration files you can use the following `make` command:
@@ -178,11 +166,7 @@ make create-migration NAME=<migration-name>
 
 To run migration up use the following `make` command:
 
-```shell
-make migrate
-```
-
-**Note:** `DATABASE_DSN` env variable should be defined. In case it does not you can use the following `make` command:
+**Note:** `DATABASE_DSN` env variable should be defined.
 
 ```shell
 make env migrate
