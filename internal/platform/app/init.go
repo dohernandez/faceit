@@ -1,10 +1,10 @@
 package app
 
 import (
+	"github.com/dohernandez/faceit/internal/platform/config"
+	"github.com/dohernandez/faceit/internal/platform/service"
+	"github.com/dohernandez/faceit/resources/swagger"
 	sapp "github.com/dohernandez/go-grpc-service/app"
-	"github.com/dohernandez/kit-template/internal/platform/config"
-	"github.com/dohernandez/kit-template/internal/platform/service"
-	"github.com/dohernandez/kit-template/resources/swagger"
 	"github.com/dohernandez/servers"
 )
 
@@ -14,7 +14,7 @@ type Locator struct {
 
 	cfg *config.Config
 
-	KitTemplateService *service.KitTemplateService
+	FaceitService *service.FaceitService
 
 	// use cases
 }
@@ -39,7 +39,7 @@ func NewServiceLocator(cfg *config.Config, opts ...sapp.Option) (*Locator, error
 	// setting up use cases dependencies
 	l.setupUsecaseDependencies()
 
-	l.KitTemplateService = service.NewKitTemplateService(l)
+	l.FaceitService = service.NewFaceitService(l)
 
 	err = l.setupServices()
 	if err != nil {
@@ -57,11 +57,11 @@ func (l *Locator) setupUsecaseDependencies() {}
 
 func (l *Locator) setupServices() error {
 	l.InitGRPCService(
-		servers.WithRegisterService(l.KitTemplateService),
+		servers.WithRegisterService(l.FaceitService),
 	)
 
 	err := l.InitGRPCRestService(
-		servers.WithRegisterServiceHandler(l.KitTemplateService),
+		servers.WithRegisterServiceHandler(l.FaceitService),
 		servers.WithDocEndpoint(l.cfg.ServiceName,
 			"/docs/",
 			"/docs/service.swagger.json",

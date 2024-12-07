@@ -2,7 +2,7 @@
 
 FROM golang:1.23.3-bookworm AS builder
 
-WORKDIR /go/src/github.com/dohernandez/kit-template
+WORKDIR /go/src/github.com/dohernandez/faceit
 
 # This is to cache the Go modules in their own Docker layer by
 # using `go mod download`, so that next steps in the Docker build process
@@ -24,13 +24,13 @@ RUN make build
 
 FROM debian:bookworm
 
-RUN groupadd -r kittemplate && useradd --no-log-init -r -g kittemplate kittemplate
-USER kittemplate
+RUN groupadd -r faceit && useradd --no-log-init -r -g faceit faceit
+USER faceit
 
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
-COPY --from=builder --chown=kittemplate:kittemplate /go/src/github.com/dohernandez/kit-template/bin/kit-template /bin/kit-template
-COPY --from=builder --chown=kittemplate:kittemplate /go/src/github.com/dohernandez/kit-template/resources/migrations /resources/migrations
-COPY --from=builder --chown=kittemplate:kittemplate /bin/migrate /bin/migrate
+COPY --from=builder --chown=faceit:faceit /go/src/github.com/dohernandez/faceit/bin/faceit /bin/faceit
+COPY --from=builder --chown=faceit:faceit /go/src/github.com/dohernandez/faceit/resources/migrations /resources/migrations
+COPY --from=builder --chown=faceit:faceit /bin/migrate /bin/migrate
 
 EXPOSE 8000 8080 8010
-ENTRYPOINT ["kit-template"]
+ENTRYPOINT ["faceit"]

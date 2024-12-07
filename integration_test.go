@@ -1,4 +1,4 @@
-package kit_template_test
+package faceit_test
 
 import (
 	"context"
@@ -9,12 +9,12 @@ import (
 
 	"github.com/bool64/ctxd"
 	"github.com/cucumber/godog"
+	"github.com/dohernandez/faceit/internal/platform/app"
+	"github.com/dohernandez/faceit/internal/platform/config"
 	service "github.com/dohernandez/go-grpc-service"
 	sapp "github.com/dohernandez/go-grpc-service/app"
 	sconfig "github.com/dohernandez/go-grpc-service/config"
 	"github.com/dohernandez/go-grpc-service/must"
-	"github.com/dohernandez/kit-template/internal/platform/app"
-	"github.com/dohernandez/kit-template/internal/platform/config"
 	"github.com/dohernandez/servers"
 )
 

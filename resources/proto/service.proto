@@ -1,15 +1,15 @@
 syntax = "proto3";
 
-option go_package = "github.com/dohernandez/kit-template/internal/platform/service/pb/api";
+option go_package = "github.com/dohernandez/faceit/internal/platform/service/pb/api";
 
-package api.kit.template;
+package api.faceit;
 
 import "google/api/annotations.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
 
 option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
   info: {
-    title: "kit-template"
+    title: "faceit"
     version: "1.0"
     description: "Short description of the service"
   }
@@ -43,7 +43,7 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
 };
 
 // The API manages ... .
-service KitTemplateService {
+service FaceitService {
 /*
   // PostFuncName ... .
   //

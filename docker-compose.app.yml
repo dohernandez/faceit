@@ -3,8 +3,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: kittemplate-app
-    container_name: kittemplate-app
+    image: faceit-app
+    container_name: faceit-app
     env_file:
       - .env
     ports:
@@ -12,7 +12,7 @@ services:
       - "8080:8080"
       - "8010:8010"
     volumes:
-      - .:/go/src/github.com/dohernandez/kit-template
+      - .:/go/src/github.com/dohernandez/faceit
       - /tmp/go-build:/root/.cache/go-build
     depends_on:
       database:
