@@ -3,8 +3,10 @@ module github.com/dohernandez/faceit
 go 1.23.3
 
 require (
+	github.com/DATA-DOG/go-sqlmock v1.5.2
 	github.com/bool64/ctxd v1.2.1
 	github.com/bool64/dev v0.2.37
+	github.com/bool64/sqluct v0.2.4
 	github.com/cucumber/godog v0.15.0
 	github.com/dohernandez/dev-grpc v0.4.0
 	github.com/dohernandez/go-grpc-service v0.0.0-20241207222537-e6f1ffb81afd
@@ -27,7 +29,6 @@ require (
 	github.com/bool64/httpmock v0.1.15 // indirect
 	github.com/bool64/httptestbench v0.1.4 // indirect
 	github.com/bool64/shared v0.1.5 // indirect
-	github.com/bool64/sqluct v0.2.4 // indirect
 	github.com/bool64/zapctxd v1.2.0 // indirect
 	github.com/cenkalti/backoff/v4 v4.3.0 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
