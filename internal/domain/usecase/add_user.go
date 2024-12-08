@@ -3,6 +3,7 @@ package usecase
 import (
 	"context"
 	"fmt"
+
 	"github.com/bool64/ctxd"
 	"github.com/dohernandez/faceit/internal/domain/model"
 )
@@ -16,6 +17,7 @@ type UserAdder interface {
 
 //go:generate mockery --name=UserAddedNotifier --outpkg=mocks --output=mocks --filename=user_added_notifier.go --with-expecter
 
+// UserAddedNotifier defines functionality to notify about a user added.
 type UserAddedNotifier interface {
 	NotifyUserAdded(ctx context.Context, u *model.User) error
 }

@@ -1,8 +1,11 @@
 package app
 
 import (
+	"github.com/dohernandez/faceit/internal/domain/usecase"
 	"github.com/dohernandez/faceit/internal/platform/config"
+	"github.com/dohernandez/faceit/internal/platform/notifier"
 	"github.com/dohernandez/faceit/internal/platform/service"
+	"github.com/dohernandez/faceit/internal/platform/storage"
 	"github.com/dohernandez/faceit/resources/swagger"
 	sapp "github.com/dohernandez/go-grpc-service/app"
 	"github.com/dohernandez/servers"
@@ -16,7 +19,13 @@ type Locator struct {
 
 	FaceitService *service.FaceitService
 
+	notifierUser *notifier.NoopNotifier
+
+	// storages
+	storageUser *storage.User
+
 	// use cases
+	ucAddUser *usecase.AddUser
 }
 
 // NewServiceLocator creates application locator.
@@ -34,7 +43,11 @@ func NewServiceLocator(cfg *config.Config, opts ...sapp.Option) (*Locator, error
 		cfg:     cfg,
 	}
 
+	// setting up storage dependencies
 	l.setupStorage()
+
+	// setting up notifier dependencies
+	l.notifierUser = notifier.NewNoopNotifier()
 
 	// setting up use cases dependencies
 	l.setupUsecaseDependencies()
@@ -50,10 +63,14 @@ func NewServiceLocator(cfg *config.Config, opts ...sapp.Option) (*Locator, error
 }
 
 // setupStorage sets up storage dependencies (platform).
-func (l *Locator) setupStorage() {}
+func (l *Locator) setupStorage() {
+	l.storageUser = storage.NewUser(l.Storage)
+}
 
 // setupUsecaseDependencies sets up use case dependencies (domain).
-func (l *Locator) setupUsecaseDependencies() {}
+func (l *Locator) setupUsecaseDependencies() {
+	l.ucAddUser = usecase.NewAddUser(l.storageUser, l.notifierUser, l.CtxdLogger())
+}
 
 func (l *Locator) setupServices() error {
 	l.InitGRPCService(
@@ -75,4 +92,9 @@ func (l *Locator) setupServices() error {
 	l.InitMetricsService(servers.WithGRPCServer(l.GRPCService))
 
 	return nil
+}
+
+// AddUser returns the service.AddUser use case.
+func (l *Locator) AddUser() service.AddUser {
+	return l.ucAddUser
 }

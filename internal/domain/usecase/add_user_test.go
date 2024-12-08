@@ -2,7 +2,6 @@ package usecase_test
 
 import (
 	"context"
-	"github.com/stretchr/testify/assert"
 	"testing"
 
 	"github.com/bool64/ctxd"
@@ -10,6 +9,7 @@ import (
 	"github.com/dohernandez/faceit/internal/domain/usecase"
 	"github.com/dohernandez/faceit/internal/domain/usecase/mocks"
 	"github.com/google/uuid"
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 )

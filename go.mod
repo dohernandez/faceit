@@ -10,9 +10,12 @@ require (
 	github.com/cucumber/godog v0.15.0
 	github.com/dohernandez/dev-grpc v0.4.0
 	github.com/dohernandez/go-grpc-service v0.0.0-20241207222537-e6f1ffb81afd
-	github.com/dohernandez/servers v0.8.1
+	github.com/dohernandez/servers v0.9.0
 	github.com/google/uuid v1.6.0
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.24.0
+	github.com/jackc/pgconn v1.14.3
+	github.com/jackc/pgerrcode v0.0.0-20240316143900-6e2875d9b438
+	github.com/jmoiron/sqlx v1.4.0
 	github.com/stretchr/testify v1.10.0
 	google.golang.org/genproto v0.0.0-20211118181313-81c1377c94b1
 	google.golang.org/grpc v1.68.1
@@ -46,15 +49,12 @@ require (
 	github.com/hashicorp/golang-lru v1.0.2 // indirect
 	github.com/iancoleman/orderedmap v0.3.0 // indirect
 	github.com/jackc/chunkreader/v2 v2.0.1 // indirect
-	github.com/jackc/pgconn v1.14.3 // indirect
-	github.com/jackc/pgerrcode v0.0.0-20240316143900-6e2875d9b438 // indirect
 	github.com/jackc/pgio v1.0.0 // indirect
 	github.com/jackc/pgpassfile v1.0.0 // indirect
 	github.com/jackc/pgproto3/v2 v2.3.3 // indirect
 	github.com/jackc/pgservicefile v0.0.0-20240606120523-5a60cdf6a761 // indirect
 	github.com/jackc/pgx/v5 v5.7.1 // indirect
 	github.com/jackc/puddle/v2 v2.2.2 // indirect
-	github.com/jmoiron/sqlx v1.4.0 // indirect
 	github.com/joho/godotenv v1.5.1 // indirect
 	github.com/kelseyhightower/envconfig v1.4.0 // indirect
 	github.com/klauspost/compress v1.17.11 // indirect

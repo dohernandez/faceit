@@ -3,6 +3,7 @@ package storage
 import (
 	"context"
 	"fmt"
+
 	"github.com/bool64/sqluct"
 	"github.com/dohernandez/faceit/internal/domain/model"
 	"github.com/dohernandez/go-grpc-service/database"

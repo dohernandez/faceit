@@ -112,8 +112,8 @@ github.com/dohernandez/go-grpc-service v0.0.0-20241207222537-e6f1ffb81afd h1:XB+
 github.com/dohernandez/go-grpc-service v0.0.0-20241207222537-e6f1ffb81afd/go.mod h1:Un7/6HsXVqUekgMI4eSHE2rv1Hw6v+APWTwje25X8v8=
 github.com/dohernandez/goservicing v1.0.1 h1:DNUZqjD1RwLQ5kGDRHLufkA5WqiOFAavTAwk8q0P7cM=
 github.com/dohernandez/goservicing v1.0.1/go.mod h1:2sr8jiJyr6+j9EdKxhJboZdtJ0SXZM6ZTz2mo9ubSKM=
-github.com/dohernandez/servers v0.8.1 h1:5LpExBRAUrJzraPjke5XC7vkjuOflgXKCZM2mdTPLEM=
-github.com/dohernandez/servers v0.8.1/go.mod h1:+tazPKxmd6kT083SdJSrxIzVKlrbqgtrEJqt/geaMqM=
+github.com/dohernandez/servers v0.9.0 h1:Sh6DjMu7BVzflPWA07VY/Ma1ej3Lb5VHhUMYYuglZyA=
+github.com/dohernandez/servers v0.9.0/go.mod h1:+tazPKxmd6kT083SdJSrxIzVKlrbqgtrEJqt/geaMqM=
 github.com/envoyproxy/go-control-plane v0.9.0/go.mod h1:YTl/9mNaCwkRvm6d1a2C3ymFceY/DCBVvsKhRF0iEA4=
 github.com/envoyproxy/go-control-plane v0.9.1-0.20191026205805-5f8ba28d4473/go.mod h1:YTl/9mNaCwkRvm6d1a2C3ymFceY/DCBVvsKhRF0iEA4=
 github.com/envoyproxy/go-control-plane v0.9.4/go.mod h1:6rpuAdCZL397s3pYoYcLgu1mIlRU8Am5FuJP05cCM98=

@@ -2,6 +2,10 @@ package storage_test
 
 import (
 	"context"
+	"testing"
+	"time"
+
+	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/bool64/sqluct"
 	"github.com/dohernandez/faceit/internal/domain/model"
 	"github.com/dohernandez/faceit/internal/platform/storage"
@@ -10,10 +14,6 @@ import (
 	"github.com/jackc/pgconn"
 	"github.com/jackc/pgerrcode"
 	"github.com/jmoiron/sqlx"
-	"testing"
-	"time"
-
-	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/stretchr/testify/require"
 )
 

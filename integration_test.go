@@ -9,8 +9,10 @@ import (
 
 	"github.com/bool64/ctxd"
 	"github.com/cucumber/godog"
+	"github.com/dohernandez/faceit/internal/domain/model"
 	"github.com/dohernandez/faceit/internal/platform/app"
 	"github.com/dohernandez/faceit/internal/platform/config"
+	"github.com/dohernandez/faceit/internal/platform/storage"
 	service "github.com/dohernandez/go-grpc-service"
 	sapp "github.com/dohernandez/go-grpc-service/app"
 	sconfig "github.com/dohernandez/go-grpc-service/config"
@@ -64,7 +66,7 @@ func TestIntegration(t *testing.T) {
 			// Add step definitions
 		},
 		Tables: map[string]any{
-			// "table_name": new(model.TableModel),
+			storage.UserTable: new(model.User),
 		},
 	})
 }
