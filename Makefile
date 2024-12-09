@@ -76,7 +76,7 @@ generate: protoc-cli mockery-cli
 	@go generate $(or $(SOURCE),./...)
 
 ## Generate code from proto file(s) and swagger file
-proto-gen: proto-gen-code-swagger
+proto-gen: proto-gen-code-swagger-plugin proto-gen-code
 	@cat $(SWAGGER_PATH)/service.swagger.json | jq del\(.paths[][].responses.'"default"'\) > $(SWAGGER_PATH)/service.swagger.json.tmp
 	@mv $(SWAGGER_PATH)/service.swagger.json.tmp $(SWAGGER_PATH)/service.swagger.json
 

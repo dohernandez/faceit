@@ -1,17 +1,21 @@
 package service
 
 import (
+	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	"context"
+	"crypto/sha256"
+	"encoding/hex"
 	"errors"
-
+	"fmt"
 	"github.com/bool64/ctxd"
+	"github.com/bufbuild/protovalidate-go"
 	"github.com/dohernandez/faceit/internal/domain/model"
 	api "github.com/dohernandez/faceit/internal/platform/service/pb"
 	"github.com/dohernandez/go-grpc-service/database"
+	"github.com/dohernandez/servers"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
-	"google.golang.org/grpc/status"
 )
 
 // AddUser defines the use case to add a user.
@@ -49,6 +53,31 @@ func NewFaceitService(deps FaceitServiceDeps) *FaceitService {
 func (s *FaceitService) AddUser(ctx context.Context, req *api.AddUserRequest) (*api.AddUserResponse, error) {
 	ctx = ctxd.AddFields(ctx, "service", "FaceitService")
 
+	// Validate request.
+	val, err := protovalidate.New(
+		protovalidate.WithMessages(
+			&api.AddUserRequest{},
+		),
+	)
+	if err != nil {
+		return nil, servers.Error(codes.Internal, fmt.Errorf("create proto validator: %w", err), nil)
+	}
+
+	var fieldMsgErrs map[string]string
+
+	if err = val.Validate(req); err != nil {
+		fieldMsgErrs = mapValidatorError(err)
+	}
+
+	if !isValidSHA256Hash(req.GetPasswordHash()) {
+		fieldMsgErrs["password_hash"] = "invalid hash"
+	}
+
+	if len(fieldMsgErrs) > 0 {
+		return nil, servers.Error(codes.InvalidArgument, errors.New("validation error"), fieldMsgErrs)
+	}
+
+	// Add user.
 	us := model.UserState{
 		FirstName:    req.GetFirstName(),
 		LastName:     req.GetLastName(),
@@ -61,12 +90,10 @@ func (s *FaceitService) AddUser(ctx context.Context, req *api.AddUserRequest) (*
 	id, err := s.deps.AddUser().AddUser(ctx, us)
 	if err != nil {
 		if errors.Is(err, database.ErrAlreadyExists) {
-			_ = grpc.SetHeader(ctx, metadata.Pairs("x-http-code", "409")) //nolint:errcheck
-
-			return nil, status.Error(codes.AlreadyExists, err.Error())
+			return nil, servers.Error(codes.AlreadyExists, err, "user already exists")
 		}
 
-		return nil, status.Error(codes.Internal, err.Error())
+		return nil, servers.Error(codes.Internal, err, nil)
 	}
 
 	_ = grpc.SetHeader(ctx, metadata.Pairs("x-http-code", "201")) //nolint:errcheck
@@ -74,4 +101,47 @@ func (s *FaceitService) AddUser(ctx context.Context, req *api.AddUserRequest) (*
 	return &api.AddUserResponse{
 		Id: id.String(),
 	}, nil
+}
+
+func mapValidatorError(err error) map[string]string {
+	valErrs, ok := err.(interface{ ToProto() *validate.Violations })
+	if !ok {
+		return nil
+	}
+
+	vals := valErrs.ToProto().Violations
+	if len(vals) == 0 {
+		return nil
+	}
+
+	fieldMsg := make(map[string]string)
+
+	for _, v := range vals {
+		fieldMsg[v.GetFieldPath()] = v.GetMessage()
+	}
+
+	return fieldMsg
+}
+
+func validateAddUserRequest(val *protovalidate.Validator, req *api.AddUserRequest) error {
+	if err := val.Validate(req); err != nil {
+		return servers.Error(codes.InvalidArgument, errors.New("validation error"), mapValidatorError(err))
+	}
+
+	if !isValidSHA256Hash(req.GetPasswordHash()) {
+		return servers.Error(codes.InvalidArgument, errors.New("validation error"), map[string]string{"password_hash": "invalid hash"})
+	}
+
+	return nil
+}
+
+func isValidSHA256Hash(hash string) bool {
+	// Decode the string from hexadecimal
+	decoded, err := hex.DecodeString(hash)
+	if err != nil {
+		return false // Not a valid hex string
+	}
+
+	// Check if the decoded byte slice matches the size of a SHA-256 hash
+	return len(decoded) == sha256.Size
 }
