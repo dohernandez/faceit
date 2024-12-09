@@ -24,8 +24,8 @@ func (_m *UserUpdatedNotifier) EXPECT() *UserUpdatedNotifier_Expecter {
 	return &UserUpdatedNotifier_Expecter{mock: &_m.Mock}
 }
 
-// NotifyUserAdded provides a mock function with given fields: ctx, id, info
-func (_m *UserUpdatedNotifier) NotifyUserAdded(ctx context.Context, id uuid.UUID, info model.UserInfo) error {
+// NotifyUserUpdated provides a mock function with given fields: ctx, id, info
+func (_m *UserUpdatedNotifier) NotifyUserUpdated(ctx context.Context, id uuid.UUID, info model.UserInfo) error {
 	ret := _m.Called(ctx, id, info)
 
 	var r0 error
@@ -38,32 +38,32 @@ func (_m *UserUpdatedNotifier) NotifyUserAdded(ctx context.Context, id uuid.UUID
 	return r0
 }
 
-// UserUpdatedNotifier_NotifyUserAdded_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'NotifyUserAdded'
-type UserUpdatedNotifier_NotifyUserAdded_Call struct {
+// UserUpdatedNotifier_NotifyUserUpdated_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'NotifyUserUpdated'
+type UserUpdatedNotifier_NotifyUserUpdated_Call struct {
 	*mock.Call
 }
 
-// NotifyUserAdded is a helper method to define mock.On call
+// NotifyUserUpdated is a helper method to define mock.On call
 //   - ctx context.Context
 //   - id uuid.UUID
 //   - info model.UserInfo
-func (_e *UserUpdatedNotifier_Expecter) NotifyUserAdded(ctx interface{}, id interface{}, info interface{}) *UserUpdatedNotifier_NotifyUserAdded_Call {
-	return &UserUpdatedNotifier_NotifyUserAdded_Call{Call: _e.mock.On("NotifyUserAdded", ctx, id, info)}
+func (_e *UserUpdatedNotifier_Expecter) NotifyUserUpdated(ctx interface{}, id interface{}, info interface{}) *UserUpdatedNotifier_NotifyUserUpdated_Call {
+	return &UserUpdatedNotifier_NotifyUserUpdated_Call{Call: _e.mock.On("NotifyUserUpdated", ctx, id, info)}
 }
 
-func (_c *UserUpdatedNotifier_NotifyUserAdded_Call) Run(run func(ctx context.Context, id uuid.UUID, info model.UserInfo)) *UserUpdatedNotifier_NotifyUserAdded_Call {
+func (_c *UserUpdatedNotifier_NotifyUserUpdated_Call) Run(run func(ctx context.Context, id uuid.UUID, info model.UserInfo)) *UserUpdatedNotifier_NotifyUserUpdated_Call {
 	_c.Call.Run(func(args mock.Arguments) {
 		run(args[0].(context.Context), args[1].(uuid.UUID), args[2].(model.UserInfo))
 	})
 	return _c
 }
 
-func (_c *UserUpdatedNotifier_NotifyUserAdded_Call) Return(_a0 error) *UserUpdatedNotifier_NotifyUserAdded_Call {
+func (_c *UserUpdatedNotifier_NotifyUserUpdated_Call) Return(_a0 error) *UserUpdatedNotifier_NotifyUserUpdated_Call {
 	_c.Call.Return(_a0)
 	return _c
 }
 
-func (_c *UserUpdatedNotifier_NotifyUserAdded_Call) RunAndReturn(run func(context.Context, uuid.UUID, model.UserInfo) error) *UserUpdatedNotifier_NotifyUserAdded_Call {
+func (_c *UserUpdatedNotifier_NotifyUserUpdated_Call) RunAndReturn(run func(context.Context, uuid.UUID, model.UserInfo) error) *UserUpdatedNotifier_NotifyUserUpdated_Call {
 	_c.Call.Return(run)
 	return _c
 }
@@ -73,8 +73,7 @@ func (_c *UserUpdatedNotifier_NotifyUserAdded_Call) RunAndReturn(run func(contex
 func NewUserUpdatedNotifier(t interface {
 	mock.TestingT
 	Cleanup(func())
-},
-) *UserUpdatedNotifier {
+}) *UserUpdatedNotifier {
 	mock := &UserUpdatedNotifier{}
 	mock.Mock.Test(t)
 

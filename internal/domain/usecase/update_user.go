@@ -18,7 +18,7 @@ type UserUpdater interface {
 
 // UserUpdatedNotifier defines functionality to notify about a user updated.
 type UserUpdatedNotifier interface {
-	NotifyUserAdded(ctx context.Context, id model.UserID, info model.UserInfo) error
+	NotifyUserUpdated(ctx context.Context, id model.UserID, info model.UserInfo) error
 }
 
 // UpdateUser is a use case to update a user.
@@ -48,7 +48,7 @@ func (a *UpdateUser) UpdateUser(ctx context.Context, id model.UserID, info model
 
 	a.logger.Debug(ctx, "user updated", "user_id", id)
 
-	if err := a.notifier.NotifyUserAdded(ctx, id, info); err != nil {
+	if err := a.notifier.NotifyUserUpdated(ctx, id, info); err != nil {
 		return ctxd.WrapError(ctx, err, "notify user updated")
 	}
 

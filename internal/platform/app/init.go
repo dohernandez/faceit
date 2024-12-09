@@ -25,7 +25,8 @@ type Locator struct {
 	storageUser *storage.User
 
 	// use cases
-	ucAddUser *usecase.AddUser
+	ucAddUser    *usecase.AddUser
+	ucUpdateUser *usecase.UpdateUser
 }
 
 // NewServiceLocator creates application locator.
@@ -70,6 +71,7 @@ func (l *Locator) setupStorage() {
 // setupUsecaseDependencies sets up use case dependencies (domain).
 func (l *Locator) setupUsecaseDependencies() {
 	l.ucAddUser = usecase.NewAddUser(l.storageUser, l.notifierUser, l.CtxdLogger())
+	l.ucUpdateUser = usecase.NewUpdateUser(l.storageUser, l.notifierUser, l.CtxdLogger())
 }
 
 func (l *Locator) setupServices() error {
@@ -94,7 +96,12 @@ func (l *Locator) setupServices() error {
 	return nil
 }
 
-// AddUser returns the service.AddUser use case.
+// AddUser returns the usecase.AddUser use case.
 func (l *Locator) AddUser() service.AddUser {
 	return l.ucAddUser
+}
+
+// UpdateUser returns the usecase.UpdateUser use case.
+func (l *Locator) UpdateUser() service.UpdateUser {
+	return l.ucUpdateUser
 }

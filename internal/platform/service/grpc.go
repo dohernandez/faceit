@@ -6,6 +6,8 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
+	"github.com/google/uuid"
+	"google.golang.org/protobuf/types/known/emptypb"
 
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	"github.com/bool64/ctxd"
@@ -30,6 +32,7 @@ type FaceitServiceDeps interface {
 	GRPCAddr() string
 
 	AddUser() AddUser
+	UpdateUser() UpdateUser
 }
 
 // FaceitService is the gRPC service.
@@ -137,4 +140,47 @@ func isValidSHA256Hash(hash string) bool {
 
 	// Check if the decoded byte slice matches the size of a SHA-256 hash
 	return len(decoded) == sha256.Size
+}
+
+// UpdateUser defines the use case to update a user.
+type UpdateUser interface {
+	UpdateUser(ctx context.Context, id model.UserID, info model.UserInfo) error
+}
+
+// UpdateUser update the user.
+//
+// Receives a request with user data. Responses whether the user was updated successfully or not.
+func (s *FaceitService) UpdateUser(ctx context.Context, req *api.UpdateUserRequest) (*emptypb.Empty, error) {
+	// Validate request.
+	val, err := protovalidate.New(
+		protovalidate.WithMessages(
+			&api.AddUserRequest{},
+		),
+	)
+	if err != nil {
+		return nil, servers.Error(codes.Internal, fmt.Errorf("create proto validator: %w", err), nil)
+	}
+
+	if err = val.Validate(req); err != nil {
+		return nil, servers.Error(codes.Internal, fmt.Errorf("create proto validator: %w", err), nil)
+	}
+
+	// Update user.
+	id, err := uuid.Parse(req.GetId())
+	if err != nil {
+		return nil, servers.Error(codes.InvalidArgument, fmt.Errorf("parse user id: %w", err), nil)
+	}
+
+	info := model.UserInfo{
+		FirstName: req.GetFirstName(),
+		LastName:  req.GetLastName(),
+		Nickname:  req.GetNickname(),
+		Country:   req.GetCountry(),
+	}
+
+	if err = s.deps.UpdateUser().UpdateUser(ctx, id, info); err != nil {
+		return nil, servers.Error(codes.Internal, err, nil)
+	}
+
+	return nil, nil
 }
