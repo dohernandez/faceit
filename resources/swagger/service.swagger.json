@@ -1,0 +1,169 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "faceit",
+    "description": "faceit is small microservice to manage Users.",
+    "version": "1.0"
+  },
+  "tags": [
+    {
+      "name": "FaceitService"
+    }
+  ],
+  "schemes": [
+    "http"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v1/users": {
+      "post": {
+        "summary": "AddUser add new user.",
+        "description": "Receives a request with user data. Responses whether the user was added successfully or not.",
+        "operationId": "FaceitService_AddUser",
+        "responses": {
+          "201": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/faceitAddUserResponse"
+            },
+            "examples": {
+              "application/json": {
+                "id": "26ef0140-c436-4838-a271-32652c72f6f2"
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            },
+            "examples": {
+              "application/json": {
+                "code": 400,
+                "message": "Bad Request",
+                "error": "error_id_uuid",
+                "details": [
+                  {
+                    "field": "field",
+                    "description": "invalid"
+                  }
+                ]
+              }
+            }
+          },
+          "500": {
+            "description": "Internal error.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            },
+            "examples": {
+              "application/json": {
+                "code": 500,
+                "message": "message",
+                "error": "error_id_uuid"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": "Request message to add new user.",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/faceitAddUserRequest"
+            }
+          }
+        ],
+        "tags": [
+          "FaceitService"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "faceitAddUserRequest": {
+      "type": "object",
+      "properties": {
+        "firstName": {
+          "type": "string",
+          "description": "First name of the user."
+        },
+        "lastName": {
+          "type": "string",
+          "description": "Last name of the user."
+        },
+        "nickname": {
+          "type": "string",
+          "description": "Nickname of the user."
+        },
+        "passwordHash": {
+          "type": "string",
+          "description": "Password hash of the user."
+        },
+        "email": {
+          "type": "string",
+          "description": "Email of the user."
+        },
+        "country": {
+          "type": "string",
+          "description": "Country of the user."
+        }
+      },
+      "description": "Request message to add new user.",
+      "title": "AddUserRequest",
+      "required": [
+        "firstName",
+        "lastName",
+        "passwordHash",
+        "email",
+        "country"
+      ]
+    },
+    "faceitAddUserResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "ID of the user."
+        }
+      },
+      "description": "Response message from user was added.",
+      "title": "AddUserResponse"
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    }
+  }
+}
