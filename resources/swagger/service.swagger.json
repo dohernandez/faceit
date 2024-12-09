@@ -26,12 +26,6 @@
         "description": "Receives a request with user data. Responses whether the user was added successfully or not.",
         "operationId": "FaceitService_AddUser",
         "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/faceitAddUserResponse"
-            }
-          },
           "201": {
             "description": "",
             "schema": {
@@ -47,12 +41,32 @@
             "description": "Bad Request.",
             "schema": {
               "$ref": "#/definitions/rpcStatus"
+            },
+            "examples": {
+              "application/json": {
+                "code": 400,
+                "message": "Bad Request",
+                "error": "error_id_uuid",
+                "details": [
+                  {
+                    "field": "field",
+                    "description": "invalid"
+                  }
+                ]
+              }
             }
           },
           "500": {
             "description": "Internal error.",
             "schema": {
               "$ref": "#/definitions/rpcStatus"
+            },
+            "examples": {
+              "application/json": {
+                "code": 500,
+                "message": "message",
+                "error": "error_id_uuid"
+              }
             }
           }
         },
@@ -107,7 +121,6 @@
       "required": [
         "firstName",
         "lastName",
-        "nickname",
         "passwordHash",
         "email",
         "country"

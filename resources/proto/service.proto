@@ -21,6 +21,10 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
     key: "400"
     value: {
       description: "Bad Request.";
+      examples: {
+        key: "application/json"
+        value: '{"code": 400,"message": "Bad Request","error": "error_id_uuid","details": [{"field": "field", "description": "invalid"}]}'
+      }
       schema: {
         json_schema: {
           ref: ".google.rpc.Status"
@@ -32,6 +36,10 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
     key: "500"
     value: {
       description: "Internal error."
+      examples: {
+        key: "application/json"
+        value: '{"code": 500, "message": "message","error": "error_id_uuid"}'
+      }
       schema: {
         json_schema: {
           ref: ".google.rpc.Status"
