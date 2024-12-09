@@ -21,12 +21,16 @@ func TestUser_AddUser(t *testing.T) {
 	t.Parallel()
 
 	userState := model.UserState{
-		FirstName:    "Alice",
-		LastName:     "Bob",
-		Nickname:     "AB123",
-		PasswordHash: "supersecurepassword",
-		Email:        "alice@bob.com",
-		Country:      "UK",
+		UserCredentials: model.UserCredentials{
+			PasswordHash: "supersecurepassword",
+			Email:        "alice@bob.com",
+		},
+		UserInfo: model.UserInfo{
+			FirstName: "Alice",
+			LastName:  "Bob",
+			Nickname:  "AB123",
+			Country:   "UK",
+		},
 	}
 
 	userID := uuid.New()
@@ -39,15 +43,15 @@ func TestUser_AddUser(t *testing.T) {
 		defer db.Close() //nolint:errcheck
 
 		meQuery := mock.ExpectQuery(`
-				INSERT INTO users (first_name,last_name,nickname,password_hash,email,country) 
+				INSERT INTO users (password_hash,email,first_name,last_name,nickname,country) 
 				VALUES ($1,$2,$3,$4,$5,$6) RETURNING *
 			`).
 			WithArgs(
+				userState.PasswordHash,
+				userState.Email,
 				userState.FirstName,
 				userState.LastName,
 				userState.Nickname,
-				userState.PasswordHash,
-				userState.Email,
 				userState.Country,
 			)
 
@@ -98,15 +102,15 @@ func TestUser_AddUser(t *testing.T) {
 		defer db.Close() //nolint:errcheck
 
 		meQuery := mock.ExpectQuery(`
-				INSERT INTO users (first_name,last_name,nickname,password_hash,email,country)
+				INSERT INTO users (password_hash,email,first_name,last_name,nickname,country)
 				VALUES ($1,$2,$3,$4,$5,$6) RETURNING *
 			`).
 			WithArgs(
+				userState.PasswordHash,
+				userState.Email,
 				userState.FirstName,
 				userState.LastName,
 				userState.Nickname,
-				userState.PasswordHash,
-				userState.Email,
 				userState.Country,
 			)
 
@@ -130,15 +134,15 @@ func TestUser_AddUser(t *testing.T) {
 		defer db.Close() //nolint:errcheck
 
 		meQuery := mock.ExpectQuery(`
-				INSERT INTO users (first_name,last_name,nickname,password_hash,email,country)
+				INSERT INTO users (password_hash,email,first_name,last_name,nickname,country)
 				VALUES ($1,$2,$3,$4,$5,$6) RETURNING *
 			`).
 			WithArgs(
+				userState.PasswordHash,
+				userState.Email,
 				userState.FirstName,
 				userState.LastName,
 				userState.Nickname,
-				userState.PasswordHash,
-				userState.Email,
 				userState.Country,
 			)
 

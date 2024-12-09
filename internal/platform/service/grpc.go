@@ -80,12 +80,16 @@ func (s *FaceitService) AddUser(ctx context.Context, req *api.AddUserRequest) (*
 
 	// Add user.
 	us := model.UserState{
-		FirstName:    req.GetFirstName(),
-		LastName:     req.GetLastName(),
-		Nickname:     req.GetNickname(),
-		PasswordHash: req.GetPasswordHash(),
-		Email:        req.GetEmail(),
-		Country:      req.GetCountry(),
+		UserCredentials: model.UserCredentials{
+			PasswordHash: req.GetPasswordHash(),
+			Email:        req.GetEmail(),
+		},
+		UserInfo: model.UserInfo{
+			FirstName: req.GetFirstName(),
+			LastName:  req.GetLastName(),
+			Nickname:  req.GetNickname(),
+			Country:   req.GetCountry(),
+		},
 	}
 
 	id, err := s.deps.AddUser().AddUser(ctx, us)

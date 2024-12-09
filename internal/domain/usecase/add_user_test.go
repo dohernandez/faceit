@@ -18,12 +18,16 @@ func TestAddUser_AddUser(t *testing.T) {
 	t.Parallel()
 
 	userState := model.UserState{
-		FirstName:    "Alice",
-		LastName:     "Bob",
-		Nickname:     "AB123",
-		PasswordHash: "supersecurepassword",
-		Email:        "alice@bob.com",
-		Country:      "UK",
+		UserCredentials: model.UserCredentials{
+			PasswordHash: "supersecurepassword",
+			Email:        "alice@bob.com",
+		},
+		UserInfo: model.UserInfo{
+			FirstName: "Alice",
+			LastName:  "Bob",
+			Nickname:  "AB123",
+			Country:   "UK",
+		},
 	}
 
 	t.Run("success", func(t *testing.T) {
