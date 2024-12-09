@@ -123,7 +123,6 @@ func TestUser_AddUser(t *testing.T) {
 		_, err = repo.AddUser(context.Background(), userState)
 		require.Error(t, err)
 		require.ErrorIs(t, err, database.ErrAlreadyExists)
-		require.ErrorContains(t, err, "storage.User: add user")
 	})
 
 	t.Run("error", func(t *testing.T) {
@@ -154,6 +153,105 @@ func TestUser_AddUser(t *testing.T) {
 
 		_, err = repo.AddUser(context.Background(), userState)
 		require.Error(t, err)
-		require.ErrorContains(t, err, "storage.User: add user")
+	})
+}
+
+func TestUser_UpdateUser(t *testing.T) {
+	t.Parallel()
+
+	userIfo := model.UserInfo{
+		FirstName: "Alice",
+		LastName:  "Bob",
+		Nickname:  "AB123",
+		Country:   "UK",
+	}
+
+	userID := uuid.New()
+
+	t.Run("success", func(t *testing.T) {
+		t.Parallel()
+
+		db, mock, err := sqlmock.New(sqlmock.QueryMatcherOption(sqlmock.QueryMatcherEqual))
+		require.NoError(t, err)
+		defer db.Close() //nolint:errcheck
+
+		meQuery := mock.ExpectExec(`
+				UPDATE users SET first_name = $1, last_name = $2, nickname = $3, country = $4 WHERE id = $5
+			`).
+			WithArgs(
+				userIfo.FirstName,
+				userIfo.LastName,
+				userIfo.Nickname,
+				userIfo.Country,
+				userID,
+			)
+
+		meQuery.WillReturnResult(sqlmock.NewResult(0, 1))
+
+		st := sqluct.NewStorage(sqlx.NewDb(db, "sqlmock"))
+
+		repo := storage.NewUser(st)
+
+		err = repo.UpdateUser(context.Background(), userID, userIfo)
+		require.NoError(t, err)
+
+		require.NoError(t, mock.ExpectationsWereMet())
+	})
+
+	t.Run("not found", func(t *testing.T) {
+		t.Parallel()
+
+		db, mock, err := sqlmock.New(sqlmock.QueryMatcherOption(sqlmock.QueryMatcherEqual))
+		require.NoError(t, err)
+		defer db.Close() //nolint:errcheck
+
+		meQuery := mock.ExpectExec(`
+				UPDATE users SET first_name = $1, last_name = $2, nickname = $3, country = $4 WHERE id = $5
+			`).
+			WithArgs(
+				userIfo.FirstName,
+				userIfo.LastName,
+				userIfo.Nickname,
+				userIfo.Country,
+				userID,
+			)
+
+		meQuery.WillReturnResult(sqlmock.NewResult(0, 0))
+
+		st := sqluct.NewStorage(sqlx.NewDb(db, "sqlmock"))
+
+		repo := storage.NewUser(st)
+
+		err = repo.UpdateUser(context.Background(), userID, userIfo)
+		require.Error(t, err)
+		require.ErrorIs(t, err, database.ErrNotFound)
+	})
+
+	t.Run("error", func(t *testing.T) {
+		t.Parallel()
+
+		db, mock, err := sqlmock.New(sqlmock.QueryMatcherOption(sqlmock.QueryMatcherEqual))
+		require.NoError(t, err)
+		defer db.Close() //nolint:errcheck
+
+		meQuery := mock.ExpectExec(`
+				UPDATE users SET first_name = $1, last_name = $2, nickname = $3, country = $4 WHERE id = $5
+			`).
+			WithArgs(
+				userIfo.FirstName,
+				userIfo.LastName,
+				userIfo.Nickname,
+				userIfo.Country,
+				userID,
+			)
+
+		meQuery.WillReturnError(&pgconn.PgError{Code: pgerrcode.InternalError})
+
+		st := sqluct.NewStorage(sqlx.NewDb(db, "sqlmock"))
+
+		repo := storage.NewUser(st)
+
+		err = repo.UpdateUser(context.Background(), userID, userIfo)
+		require.Error(t, err)
 	})
 }

@@ -2,8 +2,9 @@ package storage
 
 import (
 	"context"
-	"fmt"
 
+	"github.com/Masterminds/squirrel"
+	"github.com/bool64/ctxd"
 	"github.com/bool64/sqluct"
 	"github.com/dohernandez/faceit/internal/domain/model"
 	"github.com/dohernandez/go-grpc-service/database"
@@ -18,6 +19,7 @@ type User struct {
 	storage *sqluct.Storage
 
 	// col names for users table search
+	colID      string
 	colCountry string
 }
 
@@ -27,14 +29,13 @@ func NewUser(storage *sqluct.Storage) *User {
 
 	return &User{
 		storage:    storage,
+		colID:      storage.Mapper.Col(&user, &user.ID),
 		colCountry: storage.Mapper.Col(&user, &user.Country),
 	}
 }
 
 // AddUser store the user data.
 func (s *User) AddUser(ctx context.Context, u model.UserState) (*model.User, error) {
-	errMsg := "storage.User: add user"
-
 	q := s.storage.InsertStmt(UserTable, u).Suffix("RETURNING *")
 
 	var user model.User
@@ -45,8 +46,29 @@ func (s *User) AddUser(ctx context.Context, u model.UserState) (*model.User, err
 	}
 
 	if pgx.IsUniqueViolation(err) {
-		return nil, fmt.Errorf("%s: %w: %w", errMsg, database.ErrAlreadyExists, err)
+		return nil, ctxd.LabeledError(database.ErrAlreadyExists, err)
 	}
 
-	return nil, fmt.Errorf("%s: %w", errMsg, err)
+	return nil, err
+}
+
+// UpdateUser updates the user data.
+func (s *User) UpdateUser(ctx context.Context, id model.UserID, info model.UserInfo) error {
+	q := s.storage.UpdateStmt(UserTable, info).Where(squirrel.Eq{s.colID: id})
+
+	res, err := s.storage.Exec(ctx, q)
+	if err != nil {
+		return err
+	}
+
+	rowsAffected, err := res.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	if rowsAffected == 0 {
+		return database.ErrNotFound
+	}
+
+	return nil
 }
