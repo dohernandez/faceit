@@ -1,12 +1,13 @@
 package service
 
 import (
-	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	"context"
 	"crypto/sha256"
 	"encoding/hex"
 	"errors"
 	"fmt"
+
+	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	"github.com/bool64/ctxd"
 	"github.com/bufbuild/protovalidate-go"
 	"github.com/dohernandez/faceit/internal/domain/model"
@@ -109,7 +110,7 @@ func mapValidatorError(err error) map[string]string {
 		return nil
 	}
 
-	vals := valErrs.ToProto().Violations
+	vals := valErrs.ToProto().GetViolations()
 	if len(vals) == 0 {
 		return nil
 	}
@@ -117,22 +118,10 @@ func mapValidatorError(err error) map[string]string {
 	fieldMsg := make(map[string]string)
 
 	for _, v := range vals {
-		fieldMsg[v.GetFieldPath()] = v.GetMessage()
+		fieldMsg[v.GetFieldPath()] = v.GetMessage() //nolint:staticcheck // It is deprecated but still used in the proto package
 	}
 
 	return fieldMsg
-}
-
-func validateAddUserRequest(val *protovalidate.Validator, req *api.AddUserRequest) error {
-	if err := val.Validate(req); err != nil {
-		return servers.Error(codes.InvalidArgument, errors.New("validation error"), mapValidatorError(err))
-	}
-
-	if !isValidSHA256Hash(req.GetPasswordHash()) {
-		return servers.Error(codes.InvalidArgument, errors.New("validation error"), map[string]string{"password_hash": "invalid hash"})
-	}
-
-	return nil
 }
 
 func isValidSHA256Hash(hash string) bool {
