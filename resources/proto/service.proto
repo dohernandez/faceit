@@ -7,6 +7,7 @@ package api.faceit;
 import "google/api/annotations.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
 import "buf/validate/validate.proto";
+import "google/protobuf/empty.proto";
 
 option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
   info: {
@@ -66,6 +67,7 @@ service FaceitService {
       responses: {
         key: "201"
         value: {
+          description: "User was added successfully."
           examples: {
             key: "application/json"
             value: '{"id": "26ef0140-c436-4838-a271-32652c72f6f2"}'
@@ -79,6 +81,43 @@ service FaceitService {
       }
     };
   }
+
+  // Update the user.
+  //
+  // Receives a request with user data. Responses whether the user was updated successfully or not.
+  rpc UpdateUser(UpdateUserRequest) returns (google.protobuf.Empty) {
+    // Client example (Assuming the service is hosted at the given 'DOMAIN_NAME'):
+    // Client example:
+    //   curl -X PATCH -d '{"first_name": "Alice", "last_name": "Bob", "nickname": "AB123", "country": "UK"}' http://DOMAIN_NAME/v1/users/26ef0140-c436-4838-a271-32652c72f6f2
+    option (google.api.http) = {
+      patch : "/v1/users/{id}"
+      body : "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      responses: {
+        key: "204"
+        value: {
+          description: "User was updated successfully."
+          schema: {
+            json_schema: {
+              ref: ".google.protobuf.Empty"
+            }
+          }
+        }
+      }
+      responses: {
+        key: "404"
+        value: {
+          description: "User not found."
+          schema: {
+            json_schema: {
+              ref: ".google.protobuf.Empty"
+            }
+          }
+        }
+      }
+    };
+  };
 /*
   // GetFuncName.
   //
@@ -176,6 +215,42 @@ message AddUserResponse {
   };
   // ID of the user.
   string id = 1;
+}
+
+message UpdateUserRequest {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+  json_schema: {
+      title: "UpdateUserRequest"
+      description: "Request message to update user."
+    }
+  };
+
+  // ID of the user.
+  string id = 1 [(buf.validate.field).cel = {
+    message: "must not be empty"
+    expression: "this != ''"
+  }, (buf.validate.field).string.uuid = true];
+
+  // First name of the user.
+  optional string first_name = 2 [(buf.validate.field).cel = {
+  message: "must not be empty"
+      expression: "this != ''"
+      }];
+  // Last name of the user.
+  optional string last_name = 3 [(buf.validate.field).cel = {
+  message: "must not be empty"
+      expression: "this != ''"
+      }];
+  // Nickname of the user.
+  optional string nickname = 4;
+  // Country of the user.
+  optional string country = 5 [(buf.validate.field).cel = {
+    message: "must not be empty"
+    expression: "this != ''"
+  }, (buf.validate.field).cel = {
+    message: "must have 2 characters"
+    expression: "this.size() == 2"
+  }];
 }
 
 /*

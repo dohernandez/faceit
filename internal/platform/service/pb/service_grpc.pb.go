@@ -8,9 +8,11 @@ package api
 
 import (
 	context "context"
+
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -19,7 +21,8 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	FaceitService_AddUser_FullMethodName = "/api.faceit.FaceitService/AddUser"
+	FaceitService_AddUser_FullMethodName    = "/api.faceit.FaceitService/AddUser"
+	FaceitService_UpdateUser_FullMethodName = "/api.faceit.FaceitService/UpdateUser"
 )
 
 // FaceitServiceClient is the client API for FaceitService service.
@@ -32,6 +35,10 @@ type FaceitServiceClient interface {
 	//
 	// Receives a request with user data. Responses whether the user was added successfully or not.
 	AddUser(ctx context.Context, in *AddUserRequest, opts ...grpc.CallOption) (*AddUserResponse, error)
+	// Update the user.
+	//
+	// Receives a request with user data. Responses whether the user was updated successfully or not.
+	UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type faceitServiceClient struct {
@@ -52,6 +59,16 @@ func (c *faceitServiceClient) AddUser(ctx context.Context, in *AddUserRequest, o
 	return out, nil
 }
 
+func (c *faceitServiceClient) UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, FaceitService_UpdateUser_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // FaceitServiceServer is the server API for FaceitService service.
 // All implementations must embed UnimplementedFaceitServiceServer
 // for forward compatibility.
@@ -62,6 +79,10 @@ type FaceitServiceServer interface {
 	//
 	// Receives a request with user data. Responses whether the user was added successfully or not.
 	AddUser(context.Context, *AddUserRequest) (*AddUserResponse, error)
+	// Update the user.
+	//
+	// Receives a request with user data. Responses whether the user was updated successfully or not.
+	UpdateUser(context.Context, *UpdateUserRequest) (*emptypb.Empty, error)
 	mustEmbedUnimplementedFaceitServiceServer()
 }
 
@@ -74,6 +95,10 @@ type UnimplementedFaceitServiceServer struct{}
 
 func (UnimplementedFaceitServiceServer) AddUser(context.Context, *AddUserRequest) (*AddUserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddUser not implemented")
+}
+
+func (UnimplementedFaceitServiceServer) UpdateUser(context.Context, *UpdateUserRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateUser not implemented")
 }
 func (UnimplementedFaceitServiceServer) mustEmbedUnimplementedFaceitServiceServer() {}
 func (UnimplementedFaceitServiceServer) testEmbeddedByValue()                       {}
@@ -114,6 +139,24 @@ func _FaceitService_AddUser_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
+func _FaceitService_UpdateUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateUserRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FaceitServiceServer).UpdateUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: FaceitService_UpdateUser_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FaceitServiceServer).UpdateUser(ctx, req.(*UpdateUserRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // FaceitService_ServiceDesc is the grpc.ServiceDesc for FaceitService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -124,6 +167,10 @@ var FaceitService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "AddUser",
 			Handler:    _FaceitService_AddUser_Handler,
+		},
+		{
+			MethodName: "UpdateUser",
+			Handler:    _FaceitService_UpdateUser_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
