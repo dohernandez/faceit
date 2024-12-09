@@ -45,13 +45,13 @@ func (a *AddUser) AddUser(ctx context.Context, us model.UserState) (model.UserID
 
 	u, err := a.adder.AddUser(ctx, us)
 	if err != nil {
-		return model.UserID{}, fmt.Errorf("usecase.AddUser: add user: %w", err)
+		return model.UserID{}, fmt.Errorf("add user: %w", err)
 	}
 
 	a.logger.Debug(ctx, "user added", "user_id", u.ID)
 
 	if err := a.notifier.NotifyUserAdded(ctx, u); err != nil {
-		return model.UserID{}, fmt.Errorf("usecase.AddUser: notify user added: %w", err)
+		return model.UserID{}, fmt.Errorf("notify user added: %w", err)
 	}
 
 	a.logger.Debug(ctx, "user added notification sent", "user_id", u.ID)
