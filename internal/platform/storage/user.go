@@ -53,7 +53,7 @@ func (s *User) AddUser(ctx context.Context, u model.UserState) (*model.User, err
 }
 
 // UpdateUser updates the user data.
-func (s *User) UpdateUser(ctx context.Context, id model.UserID, info model.UserInfo) error {
+func (s *User) UpdateUser(ctx context.Context, id model.UserID, info model.UserState) error {
 	q := s.storage.UpdateStmt(UserTable, info).Where(squirrel.Eq{s.colID: id})
 
 	res, err := s.storage.Exec(ctx, q)

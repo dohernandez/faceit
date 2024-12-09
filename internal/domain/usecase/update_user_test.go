@@ -18,7 +18,7 @@ func TestUpdateUser_UpdateUser(t *testing.T) {
 
 	uID := uuid.New()
 
-	userInfo := model.UserInfo{
+	userState := model.UserState{
 		FirstName: "Alice",
 		LastName:  "Bob",
 		Nickname:  "AB123",
@@ -29,16 +29,16 @@ func TestUpdateUser_UpdateUser(t *testing.T) {
 		t.Parallel()
 
 		updater := mocks.NewUserUpdater(t)
-		updater.EXPECT().UpdateUser(mock.Anything, uID, userInfo).Return(nil)
+		updater.EXPECT().UpdateUser(mock.Anything, uID, userState).Return(nil)
 
 		notifier := mocks.NewUserUpdatedNotifier(t)
-		notifier.EXPECT().NotifyUserAdded(mock.Anything, uID, userInfo).Return(nil)
+		notifier.EXPECT().NotifyUserUpdated(mock.Anything, uID, userState).Return(nil)
 
 		logger := &ctxd.LoggerMock{}
 
 		uc := NewUpdateUser(updater, notifier, logger)
 
-		err := uc.UpdateUser(context.Background(), uID, userInfo)
+		err := uc.UpdateUser(context.Background(), uID, userState)
 		require.NoError(t, err)
 	})
 
@@ -46,7 +46,7 @@ func TestUpdateUser_UpdateUser(t *testing.T) {
 		t.Parallel()
 
 		updater := mocks.NewUserUpdater(t)
-		updater.EXPECT().UpdateUser(mock.Anything, uID, userInfo).Return(assert.AnError)
+		updater.EXPECT().UpdateUser(mock.Anything, uID, userState).Return(assert.AnError)
 
 		notifier := mocks.NewUserUpdatedNotifier(t)
 
@@ -54,7 +54,7 @@ func TestUpdateUser_UpdateUser(t *testing.T) {
 
 		uc := NewUpdateUser(updater, notifier, logger)
 
-		err := uc.UpdateUser(context.Background(), uID, userInfo)
+		err := uc.UpdateUser(context.Background(), uID, userState)
 		require.Error(t, err)
 		require.ErrorIs(t, err, assert.AnError)
 	})
@@ -63,16 +63,16 @@ func TestUpdateUser_UpdateUser(t *testing.T) {
 		t.Parallel()
 
 		updater := mocks.NewUserUpdater(t)
-		updater.EXPECT().UpdateUser(mock.Anything, uID, userInfo).Return(nil)
+		updater.EXPECT().UpdateUser(mock.Anything, uID, userState).Return(nil)
 
 		notifier := mocks.NewUserUpdatedNotifier(t)
-		notifier.EXPECT().NotifyUserAdded(mock.Anything, uID, userInfo).Return(assert.AnError)
+		notifier.EXPECT().NotifyUserUpdated(mock.Anything, uID, userState).Return(assert.AnError)
 
 		logger := &ctxd.LoggerMock{}
 
 		uc := NewUpdateUser(updater, notifier, logger)
 
-		err := uc.UpdateUser(context.Background(), uID, userInfo)
+		err := uc.UpdateUser(context.Background(), uID, userState)
 		require.Error(t, err)
 		require.ErrorIs(t, err, assert.AnError)
 	})

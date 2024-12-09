@@ -82,8 +82,7 @@ func (_c *UserAdder_AddUser_Call) RunAndReturn(run func(context.Context, model.U
 func NewUserAdder(t interface {
 	mock.TestingT
 	Cleanup(func())
-},
-) *UserAdder {
+}) *UserAdder {
 	mock := &UserAdder{}
 	mock.Mock.Test(t)
 

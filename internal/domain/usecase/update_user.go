@@ -11,14 +11,14 @@ import (
 
 // UserUpdater defines functionality to update a user to the data layer.
 type UserUpdater interface {
-	UpdateUser(ctx context.Context, id model.UserID, info model.UserInfo) error
+	UpdateUser(ctx context.Context, id model.UserID, info model.UserState) error
 }
 
 //go:generate mockery --name=UserUpdatedNotifier --outpkg=mocks --output=mocks --filename=user_updated_notifier.go --with-expecter
 
 // UserUpdatedNotifier defines functionality to notify about a user updated.
 type UserUpdatedNotifier interface {
-	NotifyUserUpdated(ctx context.Context, id model.UserID, info model.UserInfo) error
+	NotifyUserUpdated(ctx context.Context, id model.UserID, info model.UserState) error
 }
 
 // UpdateUser is a use case to update a user.
@@ -39,7 +39,7 @@ func NewUpdateUser(userUpdater UserUpdater, notifier UserUpdatedNotifier, logger
 }
 
 // UpdateUser executes the update user use case.
-func (a *UpdateUser) UpdateUser(ctx context.Context, id model.UserID, info model.UserInfo) error {
+func (a *UpdateUser) UpdateUser(ctx context.Context, id model.UserID, info model.UserState) error {
 	ctx = ctxd.AddFields(ctx, "use_case", "UpdateUser")
 
 	if err := a.updater.UpdateUser(ctx, id, info); err != nil {

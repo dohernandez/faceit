@@ -25,11 +25,11 @@ func (_m *UserUpdatedNotifier) EXPECT() *UserUpdatedNotifier_Expecter {
 }
 
 // NotifyUserUpdated provides a mock function with given fields: ctx, id, info
-func (_m *UserUpdatedNotifier) NotifyUserUpdated(ctx context.Context, id uuid.UUID, info model.UserInfo) error {
+func (_m *UserUpdatedNotifier) NotifyUserUpdated(ctx context.Context, id uuid.UUID, info model.UserState) error {
 	ret := _m.Called(ctx, id, info)
 
 	var r0 error
-	if rf, ok := ret.Get(0).(func(context.Context, uuid.UUID, model.UserInfo) error); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, uuid.UUID, model.UserState) error); ok {
 		r0 = rf(ctx, id, info)
 	} else {
 		r0 = ret.Error(0)
@@ -46,14 +46,14 @@ type UserUpdatedNotifier_NotifyUserUpdated_Call struct {
 // NotifyUserUpdated is a helper method to define mock.On call
 //   - ctx context.Context
 //   - id uuid.UUID
-//   - info model.UserInfo
+//   - info model.UserState
 func (_e *UserUpdatedNotifier_Expecter) NotifyUserUpdated(ctx interface{}, id interface{}, info interface{}) *UserUpdatedNotifier_NotifyUserUpdated_Call {
 	return &UserUpdatedNotifier_NotifyUserUpdated_Call{Call: _e.mock.On("NotifyUserUpdated", ctx, id, info)}
 }
 
-func (_c *UserUpdatedNotifier_NotifyUserUpdated_Call) Run(run func(ctx context.Context, id uuid.UUID, info model.UserInfo)) *UserUpdatedNotifier_NotifyUserUpdated_Call {
+func (_c *UserUpdatedNotifier_NotifyUserUpdated_Call) Run(run func(ctx context.Context, id uuid.UUID, info model.UserState)) *UserUpdatedNotifier_NotifyUserUpdated_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(args[0].(context.Context), args[1].(uuid.UUID), args[2].(model.UserInfo))
+		run(args[0].(context.Context), args[1].(uuid.UUID), args[2].(model.UserState))
 	})
 	return _c
 }
@@ -63,7 +63,7 @@ func (_c *UserUpdatedNotifier_NotifyUserUpdated_Call) Return(_a0 error) *UserUpd
 	return _c
 }
 
-func (_c *UserUpdatedNotifier_NotifyUserUpdated_Call) RunAndReturn(run func(context.Context, uuid.UUID, model.UserInfo) error) *UserUpdatedNotifier_NotifyUserUpdated_Call {
+func (_c *UserUpdatedNotifier_NotifyUserUpdated_Call) RunAndReturn(run func(context.Context, uuid.UUID, model.UserState) error) *UserUpdatedNotifier_NotifyUserUpdated_Call {
 	_c.Call.Return(run)
 	return _c
 }

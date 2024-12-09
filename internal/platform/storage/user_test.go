@@ -21,16 +21,12 @@ func TestUser_AddUser(t *testing.T) {
 	t.Parallel()
 
 	userState := model.UserState{
-		UserCredentials: model.UserCredentials{
-			PasswordHash: "supersecurepassword",
-			Email:        "alice@bob.com",
-		},
-		UserInfo: model.UserInfo{
-			FirstName: "Alice",
-			LastName:  "Bob",
-			Nickname:  "AB123",
-			Country:   "UK",
-		},
+		PasswordHash: "supersecurepassword",
+		Email:        "alice@bob.com",
+		FirstName:    "Alice",
+		LastName:     "Bob",
+		Nickname:     "AB123",
+		Country:      "UK",
 	}
 
 	userID := uuid.New()
@@ -159,7 +155,7 @@ func TestUser_AddUser(t *testing.T) {
 func TestUser_UpdateUser(t *testing.T) {
 	t.Parallel()
 
-	userIfo := model.UserInfo{
+	userIfo := model.UserState{
 		FirstName: "Alice",
 		LastName:  "Bob",
 		Nickname:  "AB123",
@@ -168,7 +164,7 @@ func TestUser_UpdateUser(t *testing.T) {
 
 	userID := uuid.New()
 
-	t.Run("success", func(t *testing.T) {
+	t.Run("success, partial update 4", func(t *testing.T) {
 		t.Parallel()
 
 		db, mock, err := sqlmock.New(sqlmock.QueryMatcherOption(sqlmock.QueryMatcherEqual))
@@ -198,7 +194,7 @@ func TestUser_UpdateUser(t *testing.T) {
 		require.NoError(t, mock.ExpectationsWereMet())
 	})
 
-	t.Run("success, partial update", func(t *testing.T) {
+	t.Run("success, partial update 2", func(t *testing.T) {
 		t.Parallel()
 
 		db, mock, err := sqlmock.New(sqlmock.QueryMatcherOption(sqlmock.QueryMatcherEqual))
@@ -221,7 +217,7 @@ func TestUser_UpdateUser(t *testing.T) {
 
 		repo := storage.NewUser(st)
 
-		err = repo.UpdateUser(context.Background(), userID, model.UserInfo{
+		err = repo.UpdateUser(context.Background(), userID, model.UserState{
 			FirstName: userIfo.FirstName,
 			LastName:  userIfo.LastName,
 		})

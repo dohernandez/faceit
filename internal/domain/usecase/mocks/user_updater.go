@@ -25,11 +25,11 @@ func (_m *UserUpdater) EXPECT() *UserUpdater_Expecter {
 }
 
 // UpdateUser provides a mock function with given fields: ctx, id, info
-func (_m *UserUpdater) UpdateUser(ctx context.Context, id uuid.UUID, info model.UserInfo) error {
+func (_m *UserUpdater) UpdateUser(ctx context.Context, id uuid.UUID, info model.UserState) error {
 	ret := _m.Called(ctx, id, info)
 
 	var r0 error
-	if rf, ok := ret.Get(0).(func(context.Context, uuid.UUID, model.UserInfo) error); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, uuid.UUID, model.UserState) error); ok {
 		r0 = rf(ctx, id, info)
 	} else {
 		r0 = ret.Error(0)
@@ -46,14 +46,14 @@ type UserUpdater_UpdateUser_Call struct {
 // UpdateUser is a helper method to define mock.On call
 //   - ctx context.Context
 //   - id uuid.UUID
-//   - info model.UserInfo
+//   - info model.UserState
 func (_e *UserUpdater_Expecter) UpdateUser(ctx interface{}, id interface{}, info interface{}) *UserUpdater_UpdateUser_Call {
 	return &UserUpdater_UpdateUser_Call{Call: _e.mock.On("UpdateUser", ctx, id, info)}
 }
 
-func (_c *UserUpdater_UpdateUser_Call) Run(run func(ctx context.Context, id uuid.UUID, info model.UserInfo)) *UserUpdater_UpdateUser_Call {
+func (_c *UserUpdater_UpdateUser_Call) Run(run func(ctx context.Context, id uuid.UUID, info model.UserState)) *UserUpdater_UpdateUser_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(args[0].(context.Context), args[1].(uuid.UUID), args[2].(model.UserInfo))
+		run(args[0].(context.Context), args[1].(uuid.UUID), args[2].(model.UserState))
 	})
 	return _c
 }
@@ -63,7 +63,7 @@ func (_c *UserUpdater_UpdateUser_Call) Return(_a0 error) *UserUpdater_UpdateUser
 	return _c
 }
 
-func (_c *UserUpdater_UpdateUser_Call) RunAndReturn(run func(context.Context, uuid.UUID, model.UserInfo) error) *UserUpdater_UpdateUser_Call {
+func (_c *UserUpdater_UpdateUser_Call) RunAndReturn(run func(context.Context, uuid.UUID, model.UserState) error) *UserUpdater_UpdateUser_Call {
 	_c.Call.Return(run)
 	return _c
 }
@@ -73,8 +73,7 @@ func (_c *UserUpdater_UpdateUser_Call) RunAndReturn(run func(context.Context, uu
 func NewUserUpdater(t interface {
 	mock.TestingT
 	Cleanup(func())
-},
-) *UserUpdater {
+}) *UserUpdater {
 	mock := &UserUpdater{}
 	mock.Mock.Test(t)
 

@@ -83,16 +83,12 @@ func (s *FaceitService) AddUser(ctx context.Context, req *api.AddUserRequest) (*
 
 	// Add user.
 	us := model.UserState{
-		UserCredentials: model.UserCredentials{
-			PasswordHash: req.GetPasswordHash(),
-			Email:        req.GetEmail(),
-		},
-		UserInfo: model.UserInfo{
-			FirstName: req.GetFirstName(),
-			LastName:  req.GetLastName(),
-			Nickname:  req.GetNickname(),
-			Country:   req.GetCountry(),
-		},
+		PasswordHash: req.GetPasswordHash(),
+		Email:        req.GetEmail(),
+		FirstName:    req.GetFirstName(),
+		LastName:     req.GetLastName(),
+		Nickname:     req.GetNickname(),
+		Country:      req.GetCountry(),
 	}
 
 	id, err := s.deps.AddUser().AddUser(ctx, us)
@@ -144,7 +140,7 @@ func isValidSHA256Hash(hash string) bool {
 
 // UpdateUser defines the use case to update a user.
 type UpdateUser interface {
-	UpdateUser(ctx context.Context, id model.UserID, info model.UserInfo) error
+	UpdateUser(ctx context.Context, id model.UserID, info model.UserState) error
 }
 
 // UpdateUser update the user.
@@ -171,7 +167,7 @@ func (s *FaceitService) UpdateUser(ctx context.Context, req *api.UpdateUserReque
 		return nil, servers.Error(codes.InvalidArgument, fmt.Errorf("parse user id: %w", err), nil)
 	}
 
-	info := model.UserInfo{
+	info := model.UserState{
 		FirstName: req.GetFirstName(),
 		LastName:  req.GetLastName(),
 		Nickname:  req.GetNickname(),
