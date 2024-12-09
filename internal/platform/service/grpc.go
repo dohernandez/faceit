@@ -179,8 +179,14 @@ func (s *FaceitService) UpdateUser(ctx context.Context, req *api.UpdateUserReque
 	}
 
 	if err = s.deps.UpdateUser().UpdateUser(ctx, id, info); err != nil {
+		if errors.Is(err, database.ErrNotFound) {
+			return nil, servers.Error(codes.NotFound, err, "user not found")
+		}
+
 		return nil, servers.Error(codes.Internal, err, nil)
 	}
+
+	_ = grpc.SetHeader(ctx, metadata.Pairs("x-http-code", "204")) //nolint:errcheck
 
 	return nil, nil
 }

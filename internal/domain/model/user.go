@@ -28,14 +28,14 @@ type UserState struct {
 
 // UserCredentials holds the user credentials.
 type UserCredentials struct {
-	PasswordHash string `db:"password_hash"` // Hashed password
-	Email        string `db:"email"`         // Email address (unique)
+	PasswordHash string `db:"password_hash,omitempty"` // Hashed password
+	Email        string `db:"email,omitempty"`         // Email address (unique)
 }
 
 // UserInfo holds the user information.
 type UserInfo struct {
-	FirstName string `db:"first_name"` // First name of the user
-	LastName  string `db:"last_name"`  // Last name of the user
-	Nickname  string `db:"nickname"`   // Optional nickname
-	Country   string `db:"country"`    // 2-character country code
+	FirstName string `db:"first_name,omitempty"` // First name of the user
+	LastName  string `db:"last_name,omitempty"`  // Last name of the user
+	Nickname  string `db:"nickname"`             // Optional nickname
+	Country   string `db:"country,omitempty"`    // 2-character country code
 }

@@ -198,6 +198,38 @@ func TestUser_UpdateUser(t *testing.T) {
 		require.NoError(t, mock.ExpectationsWereMet())
 	})
 
+	t.Run("success, partial update", func(t *testing.T) {
+		t.Parallel()
+
+		db, mock, err := sqlmock.New(sqlmock.QueryMatcherOption(sqlmock.QueryMatcherEqual))
+		require.NoError(t, err)
+		defer db.Close() //nolint:errcheck
+
+		meQuery := mock.ExpectExec(`
+				UPDATE users SET first_name = $1, last_name = $2, nickname = $3 WHERE id = $4
+			`).
+			WithArgs(
+				userIfo.FirstName,
+				userIfo.LastName,
+				"",
+				userID,
+			)
+
+		meQuery.WillReturnResult(sqlmock.NewResult(0, 1))
+
+		st := sqluct.NewStorage(sqlx.NewDb(db, "sqlmock"))
+
+		repo := storage.NewUser(st)
+
+		err = repo.UpdateUser(context.Background(), userID, model.UserInfo{
+			FirstName: userIfo.FirstName,
+			LastName:  userIfo.LastName,
+		})
+		require.NoError(t, err)
+
+		require.NoError(t, mock.ExpectationsWereMet())
+	})
+
 	t.Run("not found", func(t *testing.T) {
 		t.Parallel()
 

@@ -7,15 +7,14 @@
 package api
 
 import (
-	reflect "reflect"
-	sync "sync"
-
 	_ "buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	_ "github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2/options"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
+	reflect "reflect"
+	sync "sync"
 )
 
 const (
@@ -410,15 +409,13 @@ func file_service_proto_rawDescGZIP() []byte {
 	return file_service_proto_rawDescData
 }
 
-var (
-	file_service_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
-	file_service_proto_goTypes  = []any{
-		(*AddUserRequest)(nil),    // 0: api.faceit.AddUserRequest
-		(*AddUserResponse)(nil),   // 1: api.faceit.AddUserResponse
-		(*UpdateUserRequest)(nil), // 2: api.faceit.UpdateUserRequest
-		(*emptypb.Empty)(nil),     // 3: google.protobuf.Empty
-	}
-)
+var file_service_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
+var file_service_proto_goTypes = []any{
+	(*AddUserRequest)(nil),    // 0: api.faceit.AddUserRequest
+	(*AddUserResponse)(nil),   // 1: api.faceit.AddUserResponse
+	(*UpdateUserRequest)(nil), // 2: api.faceit.UpdateUserRequest
+	(*emptypb.Empty)(nil),     // 3: google.protobuf.Empty
+}
 var file_service_proto_depIdxs = []int32{
 	0, // 0: api.faceit.FaceitService.AddUser:input_type -> api.faceit.AddUserRequest
 	2, // 1: api.faceit.FaceitService.UpdateUser:input_type -> api.faceit.UpdateUserRequest

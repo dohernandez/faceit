@@ -1,5 +1,5 @@
 Feature: Add new user
-  As a user, I want to add a new, so later can be used for any further analysis.
+  As a user, I want to add a new user, so later can be used for any further analysis.
 
   Background:
     Given there is a clean "postgres" database
