@@ -2,7 +2,6 @@ package usecase
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/bool64/ctxd"
 	"github.com/dohernandez/faceit/internal/domain/model"
@@ -44,13 +43,13 @@ func (a *UpdateUser) UpdateUser(ctx context.Context, id model.UserID, info model
 	ctx = ctxd.AddFields(ctx, "use_case", "UpdateUser")
 
 	if err := a.updater.UpdateUser(ctx, id, info); err != nil {
-		return fmt.Errorf("update user: %w", err)
+		return ctxd.WrapError(ctx, err, "update user") // error contains the context fields added
 	}
 
 	a.logger.Debug(ctx, "user updated", "user_id", id)
 
 	if err := a.notifier.NotifyUserAdded(ctx, id, info); err != nil {
-		return fmt.Errorf("notify user updated: %w", err)
+		return ctxd.WrapError(ctx, err, "notify user updated")
 	}
 
 	a.logger.Debug(ctx, "user updated notification sent", "user_id", id)
