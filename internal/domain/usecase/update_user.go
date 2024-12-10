@@ -40,19 +40,19 @@ func NewUpdateUser(userUpdater UserUpdater, notifier UserUpdatedNotifier, logger
 
 // UpdateUser executes the update user use case.
 func (a *UpdateUser) UpdateUser(ctx context.Context, id model.UserID, info model.UserState) error {
-	ctx = ctxd.AddFields(ctx, "use_case", "UpdateUser")
+	ctx = ctxd.AddFields(ctx, "use_case", "UpdateUser", "user_id", id)
 
 	if err := a.updater.UpdateUser(ctx, id, info); err != nil {
 		return ctxd.WrapError(ctx, err, "update user") // error contains the context fields added
 	}
 
-	a.logger.Debug(ctx, "user updated", "user_id", id)
+	a.logger.Debug(ctx, "user updated")
 
 	if err := a.notifier.NotifyUserUpdated(ctx, id, info); err != nil {
 		return ctxd.WrapError(ctx, err, "notify user updated")
 	}
 
-	a.logger.Debug(ctx, "user updated notification sent", "user_id", id)
+	a.logger.Debug(ctx, "user updated notification sent")
 
 	return nil
 }
