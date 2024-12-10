@@ -3,7 +3,6 @@ package storage_test
 import (
 	"context"
 	"testing"
-	"time"
 
 	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/bool64/sqluct"
@@ -20,16 +19,17 @@ import (
 func TestUser_AddUser(t *testing.T) {
 	t.Parallel()
 
-	userState := model.UserState{
-		PasswordHash: "supersecurepassword",
-		Email:        "alice@bob.com",
-		FirstName:    "Alice",
-		LastName:     "Bob",
-		Nickname:     "AB123",
-		Country:      "UK",
+	user := &model.User{
+		ID: uuid.New(),
+		UserState: model.UserState{
+			PasswordHash: "supersecurepassword",
+			Email:        "alice@bob.com",
+			FirstName:    "Alice",
+			LastName:     "Bob",
+			Nickname:     "AB123",
+			Country:      "UK",
+		},
 	}
-
-	userID := uuid.New()
 
 	t.Run("success", func(t *testing.T) {
 		t.Parallel()
@@ -38,54 +38,27 @@ func TestUser_AddUser(t *testing.T) {
 		require.NoError(t, err)
 		defer db.Close() //nolint:errcheck
 
-		meQuery := mock.ExpectQuery(`
-				INSERT INTO users (password_hash,email,first_name,last_name,nickname,country) 
-				VALUES ($1,$2,$3,$4,$5,$6) RETURNING *
+		mock.ExpectExec(`
+				INSERT INTO users (id,password_hash,email,first_name,last_name,nickname,country) 
+				VALUES ($1,$2,$3,$4,$5,$6,$7)
 			`).
 			WithArgs(
-				userState.PasswordHash,
-				userState.Email,
-				userState.FirstName,
-				userState.LastName,
-				userState.Nickname,
-				userState.Country,
-			)
-
-		rows := sqlmock.NewRows([]string{
-			"id", "first_name", "last_name", "nickname", "password_hash", "email", "country", "created_at", "updated_at",
-		})
-
-		rows.AddRow(
-			userID,
-			userState.FirstName,
-			userState.LastName,
-			userState.Nickname,
-			userState.PasswordHash,
-			userState.Email,
-			userState.Country,
-			time.Now(),
-			time.Now(),
-		)
-
-		meQuery.WillReturnRows(rows)
+				user.ID,
+				user.PasswordHash,
+				user.Email,
+				user.FirstName,
+				user.LastName,
+				user.Nickname,
+				user.Country,
+			).
+			WillReturnResult(sqlmock.NewResult(0, 1))
 
 		st := sqluct.NewStorage(sqlx.NewDb(db, "sqlmock"))
 
 		repo := storage.NewUser(st)
 
-		user, err := repo.AddUser(context.Background(), userState)
+		err = repo.AddUser(context.Background(), user)
 		require.NoError(t, err)
-
-		require.NotNil(t, user)
-		require.NotEmpty(t, user.ID)
-		require.Equal(t, userState.FirstName, user.FirstName)
-		require.Equal(t, userState.LastName, user.LastName)
-		require.Equal(t, userState.Nickname, user.Nickname)
-		require.Equal(t, userState.PasswordHash, user.PasswordHash)
-		require.Equal(t, userState.Email, user.Email)
-		require.Equal(t, userState.Country, user.Country)
-		require.NotEmpty(t, user.CreatedAt)
-		require.NotEmpty(t, user.UpdatedAt)
 
 		require.NoError(t, mock.ExpectationsWereMet())
 	})
@@ -97,17 +70,18 @@ func TestUser_AddUser(t *testing.T) {
 		require.NoError(t, err)
 		defer db.Close() //nolint:errcheck
 
-		meQuery := mock.ExpectQuery(`
-				INSERT INTO users (password_hash,email,first_name,last_name,nickname,country)
-				VALUES ($1,$2,$3,$4,$5,$6) RETURNING *
+		meQuery := mock.ExpectExec(`
+				INSERT INTO users (id,password_hash,email,first_name,last_name,nickname,country)
+				VALUES ($1,$2,$3,$4,$5,$6,$7)
 			`).
 			WithArgs(
-				userState.PasswordHash,
-				userState.Email,
-				userState.FirstName,
-				userState.LastName,
-				userState.Nickname,
-				userState.Country,
+				user.ID,
+				user.PasswordHash,
+				user.Email,
+				user.FirstName,
+				user.LastName,
+				user.Nickname,
+				user.Country,
 			)
 
 		meQuery.WillReturnError(&pgconn.PgError{Code: pgerrcode.UniqueViolation})
@@ -116,7 +90,7 @@ func TestUser_AddUser(t *testing.T) {
 
 		repo := storage.NewUser(st)
 
-		_, err = repo.AddUser(context.Background(), userState)
+		err = repo.AddUser(context.Background(), user)
 		require.Error(t, err)
 		require.ErrorIs(t, err, database.ErrAlreadyExists)
 	})
@@ -129,16 +103,17 @@ func TestUser_AddUser(t *testing.T) {
 		defer db.Close() //nolint:errcheck
 
 		meQuery := mock.ExpectQuery(`
-				INSERT INTO users (password_hash,email,first_name,last_name,nickname,country)
-				VALUES ($1,$2,$3,$4,$5,$6) RETURNING *
+				INSERT INTO users (id,password_hash,email,first_name,last_name,nickname,country)
+				VALUES ($1,$2,$3,$4,$5,$6,$7)
 			`).
 			WithArgs(
-				userState.PasswordHash,
-				userState.Email,
-				userState.FirstName,
-				userState.LastName,
-				userState.Nickname,
-				userState.Country,
+				user.ID,
+				user.PasswordHash,
+				user.Email,
+				user.FirstName,
+				user.LastName,
+				user.Nickname,
+				user.Country,
 			)
 
 		meQuery.WillReturnError(&pgconn.PgError{Code: pgerrcode.InternalError})
@@ -147,7 +122,7 @@ func TestUser_AddUser(t *testing.T) {
 
 		repo := storage.NewUser(st)
 
-		_, err = repo.AddUser(context.Background(), userState)
+		err = repo.AddUser(context.Background(), user)
 		require.Error(t, err)
 	})
 }

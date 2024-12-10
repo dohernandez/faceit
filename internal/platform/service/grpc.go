@@ -6,8 +6,6 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
-	"github.com/google/uuid"
-	"google.golang.org/protobuf/types/known/emptypb"
 
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	"github.com/bool64/ctxd"
@@ -16,14 +14,16 @@ import (
 	api "github.com/dohernandez/faceit/internal/platform/service/pb"
 	"github.com/dohernandez/go-grpc-service/database"
 	"github.com/dohernandez/servers"
+	"github.com/google/uuid"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
+	"google.golang.org/protobuf/types/known/emptypb"
 )
 
 // AddUser defines the use case to add a user.
 type AddUser interface {
-	AddUser(ctx context.Context, us model.UserState) (model.UserID, error)
+	AddUser(ctx context.Context, u *model.User) error
 }
 
 // FaceitServiceDeps holds the dependencies for the FaceitService.
@@ -54,44 +54,41 @@ func NewFaceitService(deps FaceitServiceDeps) *FaceitService {
 // AddUser add new user.
 //
 // Receives a request with user data. Responses whether the user was added successfully or not.
-func (s *FaceitService) AddUser(ctx context.Context, req *api.AddUserRequest) (*api.AddUserResponse, error) {
+func (s *FaceitService) AddUser(ctx context.Context, req *api.UserRequest) (*emptypb.Empty, error) {
 	ctx = ctxd.AddFields(ctx, "service", "FaceitService")
 
 	// Validate request.
 	val, err := protovalidate.New(
 		protovalidate.WithMessages(
-			&api.AddUserRequest{},
+			&api.UserRequest{},
 		),
 	)
 	if err != nil {
 		return nil, servers.Error(codes.Internal, fmt.Errorf("create proto validator: %w", err), nil)
 	}
 
-	var fieldMsgErrs map[string]string
-
-	if err = val.Validate(req); err != nil {
-		fieldMsgErrs = mapValidatorError(err)
-	}
-
-	if !isValidSHA256Hash(req.GetPasswordHash()) {
-		fieldMsgErrs["password_hash"] = "invalid hash"
-	}
-
-	if len(fieldMsgErrs) > 0 {
+	fieldMsgErrs, ok := isUserRequestValid(req, val, true)
+	if !ok {
 		return nil, servers.Error(codes.InvalidArgument, errors.New("validation error"), fieldMsgErrs)
 	}
 
+	// Extra validation since UserRequest proto message only have ID as required field.
+	//
+
 	// Add user.
-	us := model.UserState{
-		PasswordHash: req.GetPasswordHash(),
-		Email:        req.GetEmail(),
-		FirstName:    req.GetFirstName(),
-		LastName:     req.GetLastName(),
-		Nickname:     req.GetNickname(),
-		Country:      req.GetCountry(),
+	us := &model.User{
+		ID: uuid.MustParse(req.GetId()), // Safe to ignore panic as it was validated before.
+		UserState: model.UserState{
+			PasswordHash: req.GetPasswordHash(),
+			Email:        req.GetEmail(),
+			FirstName:    req.GetFirstName(),
+			LastName:     req.GetLastName(),
+			Nickname:     req.GetNickname(),
+			Country:      req.GetCountry(),
+		},
 	}
 
-	id, err := s.deps.AddUser().AddUser(ctx, us)
+	err = s.deps.AddUser().AddUser(ctx, us)
 	if err != nil {
 		if errors.Is(err, database.ErrAlreadyExists) {
 			return nil, servers.Error(codes.AlreadyExists, err, "user already exists")
@@ -100,11 +97,50 @@ func (s *FaceitService) AddUser(ctx context.Context, req *api.AddUserRequest) (*
 		return nil, servers.Error(codes.Internal, err, nil)
 	}
 
-	_ = grpc.SetHeader(ctx, metadata.Pairs("x-http-code", "201")) //nolint:errcheck
+	_ = grpc.SetHeader(ctx, metadata.Pairs("x-http-code", "204")) //nolint:errcheck
 
-	return &api.AddUserResponse{
-		Id: id.String(),
-	}, nil
+	return &emptypb.Empty{}, nil
+}
+
+func isUserRequestValid(req *api.UserRequest, val *protovalidate.Validator, forAdd bool) (map[string]string, bool) {
+	fields := make(map[string]string)
+
+	if err := val.Validate(req); err != nil {
+		fields = mapValidatorError(err)
+	}
+
+	if req.PasswordHash != nil && !isValidSHA256Hash(req.GetPasswordHash()) {
+		fields["password_hash"] = "invalid hash"
+	}
+
+	_, err := uuid.Parse(req.GetId())
+	if err != nil {
+		fields["password_hash"] = err.Error()
+	}
+
+	if !forAdd {
+		return fields, len(fields) == 0
+	}
+
+	const require = "required"
+
+	if req.Email == nil {
+		fields["email"] = require
+	}
+
+	if req.FirstName == nil {
+		fields["first_name"] = require
+	}
+
+	if req.LastName == nil {
+		fields["last_name"] = require
+	}
+
+	if req.Country == nil {
+		fields["country"] = require
+	}
+
+	return fields, len(fields) == 0
 }
 
 func mapValidatorError(err error) map[string]string {
@@ -146,35 +182,42 @@ type UpdateUser interface {
 // UpdateUser update the user.
 //
 // Receives a request with user data. Responses whether the user was updated successfully or not.
-func (s *FaceitService) UpdateUser(ctx context.Context, req *api.UpdateUserRequest) (*emptypb.Empty, error) {
+func (s *FaceitService) UpdateUser(ctx context.Context, req *api.UserRequest) (*emptypb.Empty, error) {
+	ctx = ctxd.AddFields(ctx, "service", "FaceitService")
+
 	// Validate request.
 	val, err := protovalidate.New(
 		protovalidate.WithMessages(
-			&api.AddUserRequest{},
+			&api.UserRequest{},
 		),
 	)
 	if err != nil {
 		return nil, servers.Error(codes.Internal, fmt.Errorf("create proto validator: %w", err), nil)
 	}
 
-	if err = val.Validate(req); err != nil {
-		return nil, servers.Error(codes.Internal, fmt.Errorf("create proto validator: %w", err), nil)
+	fieldMsgErrs, ok := isUserRequestValid(req, val, false)
+	if !ok {
+		return nil, servers.Error(codes.InvalidArgument, errors.New("validation error"), fieldMsgErrs)
 	}
 
-	// Update user.
-	id, err := uuid.Parse(req.GetId())
-	if err != nil {
-		return nil, servers.Error(codes.InvalidArgument, fmt.Errorf("parse user id: %w", err), nil)
+	id := uuid.MustParse(req.GetId()) // Safe to ignore panic as it was validated before.
+
+	us := model.UserState{
+		PasswordHash: req.GetPasswordHash(),
+		Email:        req.GetEmail(),
+		FirstName:    req.GetFirstName(),
+		LastName:     req.GetLastName(),
+		Nickname:     req.GetNickname(),
+		Country:      req.GetCountry(),
 	}
 
-	info := model.UserState{
-		FirstName: req.GetFirstName(),
-		LastName:  req.GetLastName(),
-		Nickname:  req.GetNickname(),
-		Country:   req.GetCountry(),
+	if us == (model.UserState{}) {
+		_ = grpc.SetHeader(ctx, metadata.Pairs("x-http-code", "204")) //nolint:errcheck
+
+		return &emptypb.Empty{}, nil
 	}
 
-	if err = s.deps.UpdateUser().UpdateUser(ctx, id, info); err != nil {
+	if err = s.deps.UpdateUser().UpdateUser(ctx, id, us); err != nil {
 		if errors.Is(err, database.ErrNotFound) {
 			return nil, servers.Error(codes.NotFound, err, "user not found")
 		}
@@ -184,5 +227,5 @@ func (s *FaceitService) UpdateUser(ctx context.Context, req *api.UpdateUserReque
 
 	_ = grpc.SetHeader(ctx, metadata.Pairs("x-http-code", "204")) //nolint:errcheck
 
-	return nil, nil
+	return &emptypb.Empty{}, nil
 }

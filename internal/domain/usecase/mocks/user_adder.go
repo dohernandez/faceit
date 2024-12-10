@@ -23,29 +23,17 @@ func (_m *UserAdder) EXPECT() *UserAdder_Expecter {
 }
 
 // AddUser provides a mock function with given fields: ctx, u
-func (_m *UserAdder) AddUser(ctx context.Context, u model.UserState) (*model.User, error) {
+func (_m *UserAdder) AddUser(ctx context.Context, u *model.User) error {
 	ret := _m.Called(ctx, u)
 
-	var r0 *model.User
-	var r1 error
-	if rf, ok := ret.Get(0).(func(context.Context, model.UserState) (*model.User, error)); ok {
-		return rf(ctx, u)
-	}
-	if rf, ok := ret.Get(0).(func(context.Context, model.UserState) *model.User); ok {
+	var r0 error
+	if rf, ok := ret.Get(0).(func(context.Context, *model.User) error); ok {
 		r0 = rf(ctx, u)
 	} else {
-		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(*model.User)
-		}
+		r0 = ret.Error(0)
 	}
 
-	if rf, ok := ret.Get(1).(func(context.Context, model.UserState) error); ok {
-		r1 = rf(ctx, u)
-	} else {
-		r1 = ret.Error(1)
-	}
-
-	return r0, r1
+	return r0
 }
 
 // UserAdder_AddUser_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'AddUser'
@@ -55,24 +43,24 @@ type UserAdder_AddUser_Call struct {
 
 // AddUser is a helper method to define mock.On call
 //   - ctx context.Context
-//   - u model.UserState
+//   - u *model.User
 func (_e *UserAdder_Expecter) AddUser(ctx interface{}, u interface{}) *UserAdder_AddUser_Call {
 	return &UserAdder_AddUser_Call{Call: _e.mock.On("AddUser", ctx, u)}
 }
 
-func (_c *UserAdder_AddUser_Call) Run(run func(ctx context.Context, u model.UserState)) *UserAdder_AddUser_Call {
+func (_c *UserAdder_AddUser_Call) Run(run func(ctx context.Context, u *model.User)) *UserAdder_AddUser_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(args[0].(context.Context), args[1].(model.UserState))
+		run(args[0].(context.Context), args[1].(*model.User))
 	})
 	return _c
 }
 
-func (_c *UserAdder_AddUser_Call) Return(_a0 *model.User, _a1 error) *UserAdder_AddUser_Call {
-	_c.Call.Return(_a0, _a1)
+func (_c *UserAdder_AddUser_Call) Return(_a0 error) *UserAdder_AddUser_Call {
+	_c.Call.Return(_a0)
 	return _c
 }
 
-func (_c *UserAdder_AddUser_Call) RunAndReturn(run func(context.Context, model.UserState) (*model.User, error)) *UserAdder_AddUser_Call {
+func (_c *UserAdder_AddUser_Call) RunAndReturn(run func(context.Context, *model.User) error) *UserAdder_AddUser_Call {
 	_c.Call.Return(run)
 	return _c
 }

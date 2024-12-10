@@ -2,6 +2,7 @@ package storage
 
 import (
 	"context"
+	"errors"
 
 	"github.com/Masterminds/squirrel"
 	"github.com/bool64/ctxd"
@@ -35,26 +36,33 @@ func NewUser(storage *sqluct.Storage) *User {
 }
 
 // AddUser store the user data.
-func (s *User) AddUser(ctx context.Context, u model.UserState) (*model.User, error) {
-	q := s.storage.InsertStmt(UserTable, u).Suffix("RETURNING *")
+func (s *User) AddUser(ctx context.Context, u *model.User) error {
+	q := s.storage.InsertStmt(UserTable, u, sqluct.SkipZeroValues)
 
-	var user model.User
+	res, err := s.storage.Exec(ctx, q)
+	if err != nil {
+		if pgx.IsUniqueViolation(err) {
+			return ctxd.LabeledError(database.ErrAlreadyExists, err)
+		}
 
-	err := s.storage.Select(ctx, q, &user)
-	if err == nil {
-		return &user, nil
+		return err
 	}
 
-	if pgx.IsUniqueViolation(err) {
-		return nil, ctxd.LabeledError(database.ErrAlreadyExists, err)
+	rowsAffected, err := res.RowsAffected()
+	if err != nil {
+		return err
 	}
 
-	return nil, err
+	if rowsAffected == 0 {
+		return errors.New("no rows affected")
+	}
+
+	return err
 }
 
 // UpdateUser updates the user data.
-func (s *User) UpdateUser(ctx context.Context, id model.UserID, info model.UserState) error {
-	q := s.storage.UpdateStmt(UserTable, info).Where(squirrel.Eq{s.colID: id})
+func (s *User) UpdateUser(ctx context.Context, id model.UserID, state model.UserState) error {
+	q := s.storage.UpdateStmt(UserTable, state).Where(squirrel.Eq{s.colID: id})
 
 	res, err := s.storage.Exec(ctx, q)
 	if err != nil {

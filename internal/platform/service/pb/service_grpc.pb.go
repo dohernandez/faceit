@@ -33,11 +33,11 @@ type FaceitServiceClient interface {
 	// AddUser add new user.
 	//
 	// Receives a request with user data. Responses whether the user was added successfully or not.
-	AddUser(ctx context.Context, in *AddUserRequest, opts ...grpc.CallOption) (*AddUserResponse, error)
+	AddUser(ctx context.Context, in *UserRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// Update the user.
 	//
 	// Receives a request with user data. Responses whether the user was updated successfully or not.
-	UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	UpdateUser(ctx context.Context, in *UserRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type faceitServiceClient struct {
@@ -48,9 +48,9 @@ func NewFaceitServiceClient(cc grpc.ClientConnInterface) FaceitServiceClient {
 	return &faceitServiceClient{cc}
 }
 
-func (c *faceitServiceClient) AddUser(ctx context.Context, in *AddUserRequest, opts ...grpc.CallOption) (*AddUserResponse, error) {
+func (c *faceitServiceClient) AddUser(ctx context.Context, in *UserRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(AddUserResponse)
+	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, FaceitService_AddUser_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -58,7 +58,7 @@ func (c *faceitServiceClient) AddUser(ctx context.Context, in *AddUserRequest, o
 	return out, nil
 }
 
-func (c *faceitServiceClient) UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *faceitServiceClient) UpdateUser(ctx context.Context, in *UserRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, FaceitService_UpdateUser_FullMethodName, in, out, cOpts...)
@@ -77,11 +77,11 @@ type FaceitServiceServer interface {
 	// AddUser add new user.
 	//
 	// Receives a request with user data. Responses whether the user was added successfully or not.
-	AddUser(context.Context, *AddUserRequest) (*AddUserResponse, error)
+	AddUser(context.Context, *UserRequest) (*emptypb.Empty, error)
 	// Update the user.
 	//
 	// Receives a request with user data. Responses whether the user was updated successfully or not.
-	UpdateUser(context.Context, *UpdateUserRequest) (*emptypb.Empty, error)
+	UpdateUser(context.Context, *UserRequest) (*emptypb.Empty, error)
 	mustEmbedUnimplementedFaceitServiceServer()
 }
 
@@ -92,10 +92,10 @@ type FaceitServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedFaceitServiceServer struct{}
 
-func (UnimplementedFaceitServiceServer) AddUser(context.Context, *AddUserRequest) (*AddUserResponse, error) {
+func (UnimplementedFaceitServiceServer) AddUser(context.Context, *UserRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddUser not implemented")
 }
-func (UnimplementedFaceitServiceServer) UpdateUser(context.Context, *UpdateUserRequest) (*emptypb.Empty, error) {
+func (UnimplementedFaceitServiceServer) UpdateUser(context.Context, *UserRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateUser not implemented")
 }
 func (UnimplementedFaceitServiceServer) mustEmbedUnimplementedFaceitServiceServer() {}
@@ -120,7 +120,7 @@ func RegisterFaceitServiceServer(s grpc.ServiceRegistrar, srv FaceitServiceServe
 }
 
 func _FaceitService_AddUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AddUserRequest)
+	in := new(UserRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -132,13 +132,13 @@ func _FaceitService_AddUser_Handler(srv interface{}, ctx context.Context, dec fu
 		FullMethod: FaceitService_AddUser_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(FaceitServiceServer).AddUser(ctx, req.(*AddUserRequest))
+		return srv.(FaceitServiceServer).AddUser(ctx, req.(*UserRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _FaceitService_UpdateUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateUserRequest)
+	in := new(UserRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -150,7 +150,7 @@ func _FaceitService_UpdateUser_Handler(srv interface{}, ctx context.Context, dec
 		FullMethod: FaceitService_UpdateUser_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(FaceitServiceServer).UpdateUser(ctx, req.(*UpdateUserRequest))
+		return srv.(FaceitServiceServer).UpdateUser(ctx, req.(*UserRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }

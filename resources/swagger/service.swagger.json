@@ -26,15 +26,13 @@
         "description": "Receives a request with user data. Responses whether the user was added successfully or not.",
         "operationId": "FaceitService_AddUser",
         "responses": {
-          "201": {
+          "204": {
             "description": "User was added successfully.",
             "schema": {
-              "$ref": "#/definitions/faceitAddUserResponse"
+              "$ref": "#/definitions/protobufEmpty"
             },
             "examples": {
-              "application/json": {
-                "id": "26ef0140-c436-4838-a271-32652c72f6f2"
-              }
+              "application/json": {}
             }
           },
           "400": {
@@ -73,11 +71,11 @@
         "parameters": [
           {
             "name": "body",
-            "description": "Request message to add new user.",
+            "description": "Request message represent user.",
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/faceitAddUserRequest"
+              "$ref": "#/definitions/faceitUserRequest"
             }
           }
         ],
@@ -176,17 +174,29 @@
           "type": "string",
           "description": "Nickname of the user."
         },
+        "passwordHash": {
+          "type": "string",
+          "description": "Password hash of the user."
+        },
+        "email": {
+          "type": "string",
+          "description": "Email of the user."
+        },
         "country": {
           "type": "string",
           "description": "Country of the user."
         }
       },
-      "description": "Request message to update user.",
-      "title": "UpdateUserRequest"
+      "description": "Request message represent user.",
+      "title": "UserRequest"
     },
-    "faceitAddUserRequest": {
+    "faceitUserRequest": {
       "type": "object",
       "properties": {
+        "id": {
+          "type": "string",
+          "description": "ID of the user."
+        },
         "firstName": {
           "type": "string",
           "description": "First name of the user."
@@ -212,26 +222,11 @@
           "description": "Country of the user."
         }
       },
-      "description": "Request message to add new user.",
-      "title": "AddUserRequest",
+      "description": "Request message represent user.",
+      "title": "UserRequest",
       "required": [
-        "firstName",
-        "lastName",
-        "passwordHash",
-        "email",
-        "country"
+        "id"
       ]
-    },
-    "faceitAddUserResponse": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string",
-          "description": "ID of the user."
-        }
-      },
-      "description": "Response message from user was added.",
-      "title": "AddUserResponse"
     },
     "protobufAny": {
       "type": "object",

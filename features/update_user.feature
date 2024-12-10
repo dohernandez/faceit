@@ -23,17 +23,3 @@ Feature: Update user
     And Then these rows are available in table "users" of database "postgres"
       | first_name | last_name | nickname | password_hash                                                    | email         | country |
       | Alice      | Bob       | AB123    | f6b7e19e0d867de6c0391879050e8297165728d89d7c4e9e8839972b356c4d9d | alice@bob.com | DE      |
-
-#  Scenario: Update user failed, invalid argument
-#    When I request HTTP endpoint with method "PATCH" and URI "/v1/users/26ef0140-c436-4838-a271-32652c72f6f2"
-#    And I request HTTP endpoint with body
-#    """
-#    {
-#      "first_name": "",
-#      "last_name": "",
-#      "nickname": "",
-#      "password_hash": "f6b7e19e0d867de6c039187905",
-#      "email": "alice",
-#      "country": "U"
-#    }
-#    """

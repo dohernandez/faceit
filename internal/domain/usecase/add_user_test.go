@@ -17,22 +17,23 @@ import (
 func TestAddUser_AddUser(t *testing.T) {
 	t.Parallel()
 
-	userState := model.UserState{
-		PasswordHash: "supersecurepassword",
-		Email:        "alice@bob.com",
-		FirstName:    "Alice",
-		LastName:     "Bob",
-		Nickname:     "AB123",
-		Country:      "UK",
+	user := &model.User{
+		ID: uuid.New(),
+		UserState: model.UserState{
+			PasswordHash: "supersecurepassword",
+			Email:        "alice@bob.com",
+			FirstName:    "Alice",
+			LastName:     "Bob",
+			Nickname:     "AB123",
+			Country:      "UK",
+		},
 	}
 
 	t.Run("success", func(t *testing.T) {
 		t.Parallel()
 
-		user := &model.User{ID: uuid.New()}
-
 		adder := mocks.NewUserAdder(t)
-		adder.EXPECT().AddUser(mock.Anything, userState).Return(user, nil)
+		adder.EXPECT().AddUser(mock.Anything, user).Return(nil)
 
 		notifier := mocks.NewUserAddedNotifier(t)
 		notifier.EXPECT().NotifyUserAdded(mock.Anything, user).Return(nil)
@@ -41,17 +42,15 @@ func TestAddUser_AddUser(t *testing.T) {
 
 		uc := usecase.NewAddUser(adder, notifier, logger)
 
-		got, err := uc.AddUser(context.Background(), userState)
+		err := uc.AddUser(context.Background(), user)
 		require.NoError(t, err)
-
-		require.Equal(t, user.ID, got)
 	})
 
 	t.Run("error adder", func(t *testing.T) {
 		t.Parallel()
 
 		adder := mocks.NewUserAdder(t)
-		adder.EXPECT().AddUser(mock.Anything, userState).Return(nil, assert.AnError)
+		adder.EXPECT().AddUser(mock.Anything, user).Return(assert.AnError)
 
 		notifier := mocks.NewUserAddedNotifier(t)
 
@@ -59,7 +58,7 @@ func TestAddUser_AddUser(t *testing.T) {
 
 		uc := usecase.NewAddUser(adder, notifier, logger)
 
-		_, err := uc.AddUser(context.Background(), userState)
+		err := uc.AddUser(context.Background(), user)
 		require.Error(t, err)
 		require.ErrorIs(t, err, assert.AnError)
 	})
@@ -67,10 +66,8 @@ func TestAddUser_AddUser(t *testing.T) {
 	t.Run("error notifier", func(t *testing.T) {
 		t.Parallel()
 
-		user := &model.User{ID: uuid.New()}
-
 		adder := mocks.NewUserAdder(t)
-		adder.EXPECT().AddUser(mock.Anything, userState).Return(user, nil)
+		adder.EXPECT().AddUser(mock.Anything, user).Return(nil)
 
 		notifier := mocks.NewUserAddedNotifier(t)
 		notifier.EXPECT().NotifyUserAdded(mock.Anything, user).Return(assert.AnError)
@@ -79,7 +76,7 @@ func TestAddUser_AddUser(t *testing.T) {
 
 		uc := usecase.NewAddUser(adder, notifier, logger)
 
-		_, err := uc.AddUser(context.Background(), userState)
+		err := uc.AddUser(context.Background(), user)
 		require.Error(t, err)
 		require.ErrorIs(t, err, assert.AnError)
 	})
