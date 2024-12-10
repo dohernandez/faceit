@@ -18,6 +18,7 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
+	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/known/emptypb"
 )
 
@@ -33,6 +34,7 @@ type FaceitServiceDeps interface {
 
 	AddUser() AddUser
 	UpdateUser() UpdateUser
+	DeleteUser() DeleteUser
 }
 
 // FaceitService is the gRPC service.
@@ -102,11 +104,16 @@ func (s *FaceitService) AddUser(ctx context.Context, req *api.UserRequest) (*emp
 	return &emptypb.Empty{}, nil
 }
 
-func isUserRequestValid(req *api.UserRequest, val *protovalidate.Validator, forAdd bool) (map[string]string, bool) {
+func isUserRequestValid(msg proto.Message, val *protovalidate.Validator, forAdd bool) (map[string]string, bool) {
 	fields := make(map[string]string)
 
-	if err := val.Validate(req); err != nil {
+	if err := val.Validate(msg); err != nil {
 		fields = mapValidatorError(err)
+	}
+
+	req, ok := msg.(*api.UserRequest)
+	if !ok {
+		return fields, len(fields) == 0
 	}
 
 	if req.PasswordHash != nil && !isValidSHA256Hash(req.GetPasswordHash()) {
@@ -218,6 +225,47 @@ func (s *FaceitService) UpdateUser(ctx context.Context, req *api.UserRequest) (*
 	}
 
 	if err = s.deps.UpdateUser().UpdateUser(ctx, id, us); err != nil {
+		if errors.Is(err, database.ErrNotFound) {
+			return nil, servers.Error(codes.NotFound, err, "user not found")
+		}
+
+		return nil, servers.Error(codes.Internal, err, nil)
+	}
+
+	_ = grpc.SetHeader(ctx, metadata.Pairs("x-http-code", "204")) //nolint:errcheck
+
+	return &emptypb.Empty{}, nil
+}
+
+// DeleteUser defines the use case to delete a user.
+type DeleteUser interface {
+	DeleteUser(ctx context.Context, id model.UserID) error
+}
+
+// DeleteUser delete the user.
+//
+// Receives a request with user data. Responses whether the user was deleted successfully or not.
+func (s *FaceitService) DeleteUser(ctx context.Context, req *api.DeleteUserRequest) (*emptypb.Empty, error) {
+	ctx = ctxd.AddFields(ctx, "service", "FaceitService")
+
+	// Validate request.
+	val, err := protovalidate.New(
+		protovalidate.WithMessages(
+			&api.DeleteUserRequest{},
+		),
+	)
+	if err != nil {
+		return nil, servers.Error(codes.Internal, fmt.Errorf("create proto validator: %w", err), nil)
+	}
+
+	fieldMsgErrs, ok := isUserRequestValid(req, val, false)
+	if !ok {
+		return nil, servers.Error(codes.InvalidArgument, errors.New("validation error"), fieldMsgErrs)
+	}
+
+	id := uuid.MustParse(req.GetId()) // Safe to ignore panic as it was validated before.
+
+	if err = s.deps.DeleteUser().DeleteUser(ctx, id); err != nil {
 		if errors.Is(err, database.ErrNotFound) {
 			return nil, servers.Error(codes.NotFound, err, "user not found")
 		}
