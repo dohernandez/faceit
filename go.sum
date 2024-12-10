@@ -131,10 +131,14 @@ github.com/dohernandez/go-grpc-service v0.0.0-20241210105202-954be6c8df04 h1:T0d
 github.com/dohernandez/go-grpc-service v0.0.0-20241210105202-954be6c8df04/go.mod h1:BQBdsPBGqVh/x4pZuUNhWa9fxwaRkyDQkr5Wlcq4uE8=
 github.com/dohernandez/go-grpc-service v0.0.0-20241210110156-4352882603cd h1:MbD7B5NJJJ0SxXDn+yEwL2ogwtKdZcDQn4QNVPuINv8=
 github.com/dohernandez/go-grpc-service v0.0.0-20241210110156-4352882603cd/go.mod h1:BQBdsPBGqVh/x4pZuUNhWa9fxwaRkyDQkr5Wlcq4uE8=
+github.com/dohernandez/go-grpc-service v0.0.0-20241210112249-15fea60e57e5 h1:pxDaEeOGamZd00LG7IhVBKN08+Qa/Ij9oK7KyHII/Fc=
+github.com/dohernandez/go-grpc-service v0.0.0-20241210112249-15fea60e57e5/go.mod h1:p4+dWqp3Y1YZusYd6bwkb/s0Jxm+f1UwhzGseQ8EDn0=
 github.com/dohernandez/goservicing v1.0.1 h1:DNUZqjD1RwLQ5kGDRHLufkA5WqiOFAavTAwk8q0P7cM=
 github.com/dohernandez/goservicing v1.0.1/go.mod h1:2sr8jiJyr6+j9EdKxhJboZdtJ0SXZM6ZTz2mo9ubSKM=
 github.com/dohernandez/servers v0.12.0 h1:OKkV24YZotPgZCRoM34FF46vpK3Ts6NWAe/jwsLDmT8=
 github.com/dohernandez/servers v0.12.0/go.mod h1:vGkLHCOIXeMJsEwys/fDWp0jYqlHA6gp7HVTc/JmDvs=
+github.com/dohernandez/servers v0.12.1 h1:5yLnSJcReyYCRiodOtBztwXYsahbsPgZBqQw6Pq4abI=
+github.com/dohernandez/servers v0.12.1/go.mod h1:vGkLHCOIXeMJsEwys/fDWp0jYqlHA6gp7HVTc/JmDvs=
 github.com/envoyproxy/go-control-plane v0.9.0/go.mod h1:YTl/9mNaCwkRvm6d1a2C3ymFceY/DCBVvsKhRF0iEA4=
 github.com/envoyproxy/go-control-plane v0.9.1-0.20191026205805-5f8ba28d4473/go.mod h1:YTl/9mNaCwkRvm6d1a2C3ymFceY/DCBVvsKhRF0iEA4=
 github.com/envoyproxy/go-control-plane v0.9.4/go.mod h1:6rpuAdCZL397s3pYoYcLgu1mIlRU8Am5FuJP05cCM98=

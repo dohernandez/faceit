@@ -80,3 +80,24 @@ func (s *User) UpdateUser(ctx context.Context, id model.UserID, state model.User
 
 	return nil
 }
+
+// DeleteUser deletes the user data.
+func (s *User) DeleteUser(ctx context.Context, id model.UserID) error {
+	q := s.storage.DeleteStmt(UserTable).Where(squirrel.Eq{s.colID: id})
+
+	res, err := s.storage.Exec(ctx, q)
+	if err != nil {
+		return err
+	}
+
+	rowsAffected, err := res.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	if rowsAffected == 0 {
+		return database.ErrNotFound
+	}
+
+	return nil
+}
