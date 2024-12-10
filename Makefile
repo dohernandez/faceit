@@ -36,8 +36,6 @@ endif
 
 # Add your include here with based path to the module.
 
--include $(DEVGO_PATH)/makefiles/lint.mk
--include $(DEVGO_PATH)/makefiles/test-unit.mk
 -include $(DEVGO_PATH)/makefiles/build.mk
 -include $(DEVGO_PATH)/makefiles/bench.mk
 
@@ -45,7 +43,8 @@ BUILD_LDFLAGS="-s -w"
 BUILD_PKG = ./cmd/...
 BINARY_NAME = faceit
 
-
+-include $(DEVSERVICEGO_PATH)/makefiles/lint.mk
+-include $(DEVSERVICEGO_PATH)/makefiles/test-unit.mk
 -include $(DEVSERVICEGO_PATH)/makefiles/dep.mk
 -include $(DEVSERVICEGO_PATH)/makefiles/docker.mk
 -include $(DEVSERVICEGO_PATH)/makefiles/test-integration.mk
@@ -65,7 +64,7 @@ SWAGGER_PATH = $(PWD)/resources/swagger
 test: test-unit test-integration
 
 ## Check the commit compile and test the change
-check: lint test
+check: fix-lint lint test
 
 ## Install all require tools to work with the project
 tools: protoc-cli mockery-cli

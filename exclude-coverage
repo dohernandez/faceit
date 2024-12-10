@@ -1,0 +1,5 @@
+# Exclude proto files from coverage
+internal/platform/service/pb
+
+# Exclude mocks from coverage
+internal/domain/usecase/mocks
