@@ -22,6 +22,7 @@ const _ = grpc.SupportPackageIsVersion9
 const (
 	FaceitService_AddUser_FullMethodName    = "/api.faceit.FaceitService/AddUser"
 	FaceitService_UpdateUser_FullMethodName = "/api.faceit.FaceitService/UpdateUser"
+	FaceitService_DeleteUser_FullMethodName = "/api.faceit.FaceitService/DeleteUser"
 )
 
 // FaceitServiceClient is the client API for FaceitService service.
@@ -38,6 +39,10 @@ type FaceitServiceClient interface {
 	//
 	// Receives a request with user data. Responses whether the user was updated successfully or not.
 	UpdateUser(ctx context.Context, in *UserRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// Delete the user.
+	//
+	// Receives a request with user data id. Responses whether the user was deleted successfully or not.
+	DeleteUser(ctx context.Context, in *DeleteUserRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type faceitServiceClient struct {
@@ -68,6 +73,16 @@ func (c *faceitServiceClient) UpdateUser(ctx context.Context, in *UserRequest, o
 	return out, nil
 }
 
+func (c *faceitServiceClient) DeleteUser(ctx context.Context, in *DeleteUserRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, FaceitService_DeleteUser_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // FaceitServiceServer is the server API for FaceitService service.
 // All implementations must embed UnimplementedFaceitServiceServer
 // for forward compatibility.
@@ -82,6 +97,10 @@ type FaceitServiceServer interface {
 	//
 	// Receives a request with user data. Responses whether the user was updated successfully or not.
 	UpdateUser(context.Context, *UserRequest) (*emptypb.Empty, error)
+	// Delete the user.
+	//
+	// Receives a request with user data id. Responses whether the user was deleted successfully or not.
+	DeleteUser(context.Context, *DeleteUserRequest) (*emptypb.Empty, error)
 	mustEmbedUnimplementedFaceitServiceServer()
 }
 
@@ -97,6 +116,9 @@ func (UnimplementedFaceitServiceServer) AddUser(context.Context, *UserRequest) (
 }
 func (UnimplementedFaceitServiceServer) UpdateUser(context.Context, *UserRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateUser not implemented")
+}
+func (UnimplementedFaceitServiceServer) DeleteUser(context.Context, *DeleteUserRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteUser not implemented")
 }
 func (UnimplementedFaceitServiceServer) mustEmbedUnimplementedFaceitServiceServer() {}
 func (UnimplementedFaceitServiceServer) testEmbeddedByValue()                       {}
@@ -155,6 +177,24 @@ func _FaceitService_UpdateUser_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
+func _FaceitService_DeleteUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteUserRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FaceitServiceServer).DeleteUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: FaceitService_DeleteUser_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FaceitServiceServer).DeleteUser(ctx, req.(*DeleteUserRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // FaceitService_ServiceDesc is the grpc.ServiceDesc for FaceitService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -169,6 +209,10 @@ var FaceitService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateUser",
 			Handler:    _FaceitService_UpdateUser_Handler,
+		},
+		{
+			MethodName: "DeleteUser",
+			Handler:    _FaceitService_DeleteUser_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

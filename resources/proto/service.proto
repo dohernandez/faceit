@@ -24,7 +24,7 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
       description: "Bad Request.";
       examples: {
         key: "application/json"
-        value: '{"code": 400,"message": "Bad Request","error": "error_id_uuid","details": [{"field": "field", "description": "invalid"}]}'
+        value: '{"code": 400,"message": "Bad Request","error": "Invalid argument","details": [{"field": "field", "description": "invalid"}]}'
       }
       schema: {
         json_schema: {
@@ -117,7 +117,44 @@ service FaceitService {
         }
       }
     };
-  };
+  }
+
+  // Delete the user.
+  //
+  // Receives a request with user data id. Responses whether the user was deleted successfully or not.
+  rpc DeleteUser(DeleteUserRequest) returns (google.protobuf.Empty) {
+    // Client example (Assuming the service is hosted at the given 'DOMAIN_NAME'):
+    // Client example:
+    //   curl -X DELETE http://DOMAIN_NAME/v1/users/26ef0140-c436-4838-a271-32652c72f6f2
+    option (google.api.http) = {
+      delete : "/v1/users/{id}"
+      body : "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      responses: {
+        key: "204"
+        value: {
+          description: "User was deleted successfully."
+          schema: {
+            json_schema: {
+              ref: ".google.protobuf.Empty"
+            }
+          }
+        }
+      }
+      responses: {
+        key: "404"
+        value: {
+          description: "User not found."
+          schema: {
+            json_schema: {
+              ref: ".google.protobuf.Empty"
+            }
+          }
+        }
+      }
+    };
+  }
 /*
   // GetFuncName.
   //
@@ -210,6 +247,22 @@ message UserRequest {
     message: "must have 2 characters"
     expression: "this.size() == 2"
   }];
+}
+
+message DeleteUserRequest {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {
+      title: "DeleteUserRequest"
+      description: "Request message to delete user."
+      required: ["id"]
+    }
+  };
+
+  // ID of the user.
+  string id = 1 [(buf.validate.field).cel = {
+    message: "must not be empty"
+    expression: "this != ''"
+  }, (buf.validate.field).string.uuid = true];
 }
 
 /*

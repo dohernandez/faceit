@@ -44,7 +44,7 @@
               "application/json": {
                 "code": 400,
                 "message": "Bad Request",
-                "error": "error_id_uuid",
+                "error": "Invalid argument",
                 "details": [
                   {
                     "field": "field",
@@ -85,6 +85,69 @@
       }
     },
     "/v1/users/{id}": {
+      "delete": {
+        "summary": "Delete the user.",
+        "description": "Receives a request with user data id. Responses whether the user was deleted successfully or not.",
+        "operationId": "FaceitService_DeleteUser",
+        "responses": {
+          "204": {
+            "description": "User was deleted successfully.",
+            "schema": {
+              "$ref": "#/definitions/protobufEmpty"
+            }
+          },
+          "400": {
+            "description": "Bad Request.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            },
+            "examples": {
+              "application/json": {
+                "code": 400,
+                "message": "Bad Request",
+                "error": "Invalid argument",
+                "details": [
+                  {
+                    "field": "field",
+                    "description": "invalid"
+                  }
+                ]
+              }
+            }
+          },
+          "404": {
+            "description": "User not found.",
+            "schema": {
+              "$ref": "#/definitions/protobufEmpty"
+            }
+          },
+          "500": {
+            "description": "Internal error.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            },
+            "examples": {
+              "application/json": {
+                "code": 500,
+                "message": "message",
+                "error": "error_id_uuid"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "description": "ID of the user.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "FaceitService"
+        ]
+      },
       "patch": {
         "summary": "Update the user.",
         "description": "Receives a request with user data. Responses whether the user was updated successfully or not.",
@@ -105,7 +168,7 @@
               "application/json": {
                 "code": 400,
                 "message": "Bad Request",
-                "error": "error_id_uuid",
+                "error": "Invalid argument",
                 "details": [
                   {
                     "field": "field",
