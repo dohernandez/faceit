@@ -26,15 +26,13 @@
         "description": "Receives a request with user data. Responses whether the user was added successfully or not.",
         "operationId": "FaceitService_AddUser",
         "responses": {
-          "201": {
-            "description": "",
+          "204": {
+            "description": "User was added successfully.",
             "schema": {
-              "$ref": "#/definitions/faceitAddUserResponse"
+              "$ref": "#/definitions/protobufEmpty"
             },
             "examples": {
-              "application/json": {
-                "id": "26ef0140-c436-4838-a271-32652c72f6f2"
-              }
+              "application/json": {}
             }
           },
           "400": {
@@ -73,11 +71,84 @@
         "parameters": [
           {
             "name": "body",
-            "description": "Request message to add new user.",
+            "description": "Request message represent user.",
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/faceitAddUserRequest"
+              "$ref": "#/definitions/faceitUserRequest"
+            }
+          }
+        ],
+        "tags": [
+          "FaceitService"
+        ]
+      }
+    },
+    "/v1/users/{id}": {
+      "patch": {
+        "summary": "Update the user.",
+        "description": "Receives a request with user data. Responses whether the user was updated successfully or not.",
+        "operationId": "FaceitService_UpdateUser",
+        "responses": {
+          "204": {
+            "description": "User was updated successfully.",
+            "schema": {
+              "$ref": "#/definitions/protobufEmpty"
+            }
+          },
+          "400": {
+            "description": "Bad Request.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            },
+            "examples": {
+              "application/json": {
+                "code": 400,
+                "message": "Bad Request",
+                "error": "error_id_uuid",
+                "details": [
+                  {
+                    "field": "field",
+                    "description": "invalid"
+                  }
+                ]
+              }
+            }
+          },
+          "404": {
+            "description": "User not found.",
+            "schema": {
+              "$ref": "#/definitions/protobufEmpty"
+            }
+          },
+          "500": {
+            "description": "Internal error.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            },
+            "examples": {
+              "application/json": {
+                "code": 500,
+                "message": "message",
+                "error": "error_id_uuid"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "description": "ID of the user.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/FaceitServiceUpdateUserBody"
             }
           }
         ],
@@ -88,7 +159,7 @@
     }
   },
   "definitions": {
-    "faceitAddUserRequest": {
+    "FaceitServiceUpdateUserBody": {
       "type": "object",
       "properties": {
         "firstName": {
@@ -116,26 +187,46 @@
           "description": "Country of the user."
         }
       },
-      "description": "Request message to add new user.",
-      "title": "AddUserRequest",
-      "required": [
-        "firstName",
-        "lastName",
-        "passwordHash",
-        "email",
-        "country"
-      ]
+      "description": "Request message represent user.",
+      "title": "UserRequest"
     },
-    "faceitAddUserResponse": {
+    "faceitUserRequest": {
       "type": "object",
       "properties": {
         "id": {
           "type": "string",
           "description": "ID of the user."
+        },
+        "firstName": {
+          "type": "string",
+          "description": "First name of the user."
+        },
+        "lastName": {
+          "type": "string",
+          "description": "Last name of the user."
+        },
+        "nickname": {
+          "type": "string",
+          "description": "Nickname of the user."
+        },
+        "passwordHash": {
+          "type": "string",
+          "description": "Password hash of the user."
+        },
+        "email": {
+          "type": "string",
+          "description": "Email of the user."
+        },
+        "country": {
+          "type": "string",
+          "description": "Country of the user."
         }
       },
-      "description": "Response message from user was added.",
-      "title": "AddUserResponse"
+      "description": "Request message represent user.",
+      "title": "UserRequest",
+      "required": [
+        "id"
+      ]
     },
     "protobufAny": {
       "type": "object",
@@ -145,6 +236,11 @@
         }
       },
       "additionalProperties": {}
+    },
+    "protobufEmpty": {
+      "type": "object",
+      "description": "service Foo {\n      rpc Bar(google.protobuf.Empty) returns (google.protobuf.Empty);\n    }",
+      "title": "A generic empty message that you can re-use to avoid defining duplicated\nempty messages in your APIs. A typical example is to use it as the request\nor the response type of an API method. For instance:"
     },
     "rpcStatus": {
       "type": "object",

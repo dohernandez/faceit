@@ -1,5 +1,5 @@
 Feature: Add new user
-  As a user, I want to add a new, so later can be used for any further analysis.
+  As a user, I want to add a new user, so later can be used for any further analysis.
 
   Background:
     Given there is a clean "postgres" database
@@ -9,6 +9,7 @@ Feature: Add new user
     And I request HTTP endpoint with body
     """
     {
+      id: "26ef0140-c436-4838-a271-32652c72f6f2",
       "first_name": "Alice",
       "last_name": "Bob",
       "nickname": "AB123",
@@ -18,18 +19,12 @@ Feature: Add new user
     }
     """
 
-    Then I should have response with status "Created"
+    Then I should have response with status "No Content"
     And I should have response with header "Content-Type: application/json"
-    And I should have response with body like
-    """
-    {
-      // Ignoring id dynamic values.
-      "id": "<ignore-diff>",
-    }
-    """
+
     And Then these rows are available in table "users" of database "postgres"
-      | first_name | last_name | nickname | password_hash                                                    | email         | country |
-      | Alice      | Bob       | AB123    | f6b7e19e0d867de6c0391879050e8297165728d89d7c4e9e8839972b356c4d9d | alice@bob.com | UK      |
+      | id                                   | first_name | last_name | nickname | password_hash                                                    | email         | country |
+      | 26ef0140-c436-4838-a271-32652c72f6f2 | Alice      | Bob       | AB123    | f6b7e19e0d867de6c0391879050e8297165728d89d7c4e9e8839972b356c4d9d | alice@bob.com | UK      |
 
 
   Scenario: Add new user failed, already exists
@@ -41,6 +36,7 @@ Feature: Add new user
     And I request HTTP endpoint with body
     """
     {
+      id: "26ef0140-c436-4838-a271-32652c72f6f2",
       "first_name": "Alice",
       "last_name": "Bob",
       "nickname": "AB123",
@@ -66,6 +62,7 @@ Feature: Add new user
     And I request HTTP endpoint with body
     """
     {
+      id: "26ef0140-c436-4838-a271-32652c72f6f2",
       "first_name": "",
       "last_name": "",
       "nickname": "",

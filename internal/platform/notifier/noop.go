@@ -18,3 +18,8 @@ func NewNoopNotifier() *NoopNotifier {
 func (n *NoopNotifier) NotifyUserAdded(_ context.Context, _ *model.User) error {
 	return nil
 }
+
+// NotifyUserUpdated does nothing.
+func (n *NoopNotifier) NotifyUserUpdated(_ context.Context, _ model.UserID, _ model.UserState) error {
+	return nil
+}

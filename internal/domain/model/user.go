@@ -21,10 +21,10 @@ type User struct {
 
 // UserState holds the user state.
 type UserState struct {
-	FirstName    string `db:"first_name"`    // First name of the user
-	LastName     string `db:"last_name"`     // Last name of the user
-	Nickname     string `db:"nickname"`      // Optional nickname
-	PasswordHash string `db:"password_hash"` // Hashed password
-	Email        string `db:"email"`         // Email address (unique)
-	Country      string `db:"country"`       // 2-character country code
+	PasswordHash string `db:"password_hash,omitempty"` // Hashed password
+	Email        string `db:"email,omitempty"`
+	FirstName    string `db:"first_name,omitempty"` // First name of the user
+	LastName     string `db:"last_name,omitempty"`  // Last name of the user
+	Nickname     string `db:"nickname"`             // Optional nickname
+	Country      string `db:"country,omitempty"`    // 2-character country code
 }

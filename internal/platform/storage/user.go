@@ -2,8 +2,10 @@ package storage
 
 import (
 	"context"
-	"fmt"
+	"errors"
 
+	"github.com/Masterminds/squirrel"
+	"github.com/bool64/ctxd"
 	"github.com/bool64/sqluct"
 	"github.com/dohernandez/faceit/internal/domain/model"
 	"github.com/dohernandez/go-grpc-service/database"
@@ -18,6 +20,7 @@ type User struct {
 	storage *sqluct.Storage
 
 	// col names for users table search
+	colID      string
 	colCountry string
 }
 
@@ -27,26 +30,53 @@ func NewUser(storage *sqluct.Storage) *User {
 
 	return &User{
 		storage:    storage,
+		colID:      storage.Mapper.Col(&user, &user.ID),
 		colCountry: storage.Mapper.Col(&user, &user.Country),
 	}
 }
 
 // AddUser store the user data.
-func (s *User) AddUser(ctx context.Context, u model.UserState) (*model.User, error) {
-	errMsg := "storage.User: add user"
+func (s *User) AddUser(ctx context.Context, u *model.User) error {
+	q := s.storage.InsertStmt(UserTable, u, sqluct.SkipZeroValues)
 
-	q := s.storage.InsertStmt(UserTable, u).Suffix("RETURNING *")
+	res, err := s.storage.Exec(ctx, q)
+	if err != nil {
+		if pgx.IsUniqueViolation(err) {
+			return ctxd.LabeledError(database.ErrAlreadyExists, err)
+		}
 
-	var user model.User
-
-	err := s.storage.Select(ctx, q, &user)
-	if err == nil {
-		return &user, nil
+		return err
 	}
 
-	if pgx.IsUniqueViolation(err) {
-		return nil, fmt.Errorf("%s: %w: %w", errMsg, database.ErrAlreadyExists, err)
+	rowsAffected, err := res.RowsAffected()
+	if err != nil {
+		return err
 	}
 
-	return nil, fmt.Errorf("%s: %w", errMsg, err)
+	if rowsAffected == 0 {
+		return errors.New("no rows affected")
+	}
+
+	return err
+}
+
+// UpdateUser updates the user data.
+func (s *User) UpdateUser(ctx context.Context, id model.UserID, state model.UserState) error {
+	q := s.storage.UpdateStmt(UserTable, state).Where(squirrel.Eq{s.colID: id})
+
+	res, err := s.storage.Exec(ctx, q)
+	if err != nil {
+		return err
+	}
+
+	rowsAffected, err := res.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	if rowsAffected == 0 {
+		return database.ErrNotFound
+	}
+
+	return nil
 }

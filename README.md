@@ -6,6 +6,9 @@
 ![Code lines](https://sloc.xyz/github/dohernandez/faceit/?category=code)
 ![Comments](https://sloc.xyz/github/dohernandez/faceit/?category=comments)
 
+- Bugs
+- Non determinism integration tests when it has paylaod such as {... details: { ... } } due to a bug in the library used to compare jsons.
+
 <!-- Short description of the service -->
 
 ## Table of Contents

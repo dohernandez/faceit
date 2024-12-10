@@ -7,6 +7,7 @@ package api.faceit;
 import "google/api/annotations.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
 import "buf/validate/validate.proto";
+import "google/protobuf/empty.proto";
 
 option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
   info: {
@@ -54,7 +55,7 @@ service FaceitService {
   // AddUser add new user.
   //
   // Receives a request with user data. Responses whether the user was added successfully or not.
-  rpc AddUser(AddUserRequest) returns (AddUserResponse) {
+  rpc AddUser(UserRequest) returns (google.protobuf.Empty) {
     // Client example (Assuming the service is hosted at the given 'DOMAIN_NAME'):
     // Client example:
     //   curl -d '{"first_name": "Alice", "last_name": "Bob", "nickname": "AB123", "password_hash": "supersecurepassword", "email": "alice@bob.com", "country": "UK"}' http://DOMAIN_NAME/v1/users
@@ -64,21 +65,59 @@ service FaceitService {
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       responses: {
-        key: "201"
+        key: "204"
         value: {
+          description: "User was added successfully."
           examples: {
             key: "application/json"
-            value: '{"id": "26ef0140-c436-4838-a271-32652c72f6f2"}'
+            value: '{}'
           }
           schema: {
             json_schema: {
-              ref: ".api.faceit.AddUserResponse"
+              ref: ".google.protobuf.Empty"
             }
           }
         }
       }
     };
   }
+
+  // Update the user.
+  //
+  // Receives a request with user data. Responses whether the user was updated successfully or not.
+  rpc UpdateUser(UserRequest) returns (google.protobuf.Empty) {
+    // Client example (Assuming the service is hosted at the given 'DOMAIN_NAME'):
+    // Client example:
+    //   curl -X PATCH -d '{"first_name": "Alice", "last_name": "Bob", "nickname": "AB123", "country": "UK"}' http://DOMAIN_NAME/v1/users/26ef0140-c436-4838-a271-32652c72f6f2
+    option (google.api.http) = {
+      patch : "/v1/users/{id}"
+      body : "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      responses: {
+        key: "204"
+        value: {
+          description: "User was updated successfully."
+          schema: {
+            json_schema: {
+              ref: ".google.protobuf.Empty"
+            }
+          }
+        }
+      }
+      responses: {
+        key: "404"
+        value: {
+          description: "User not found."
+          schema: {
+            json_schema: {
+              ref: ".google.protobuf.Empty"
+            }
+          }
+        }
+      }
+    };
+  };
 /*
   // GetFuncName.
   //
@@ -120,29 +159,35 @@ service FaceitService {
   }*/
 }
 
-message AddUserRequest {
+message UserRequest {
   option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
     json_schema: {
-      title: "AddUserRequest"
-      description: "Request message to add new user."
-      required: ["first_name", "last_name", "password_hash", "email", "country"]
+      title: "UserRequest"
+      description: "Request message represent user."
+      required: ["id"]
     }
   };
 
+  // ID of the user.
+  string id = 1 [(buf.validate.field).cel = {
+    message: "must not be empty"
+    expression: "this != ''"
+  }, (buf.validate.field).string.uuid = true];
+
   // First name of the user.
-  string first_name = 1 [(buf.validate.field).cel = {
+  optional string first_name = 2 [(buf.validate.field).cel = {
     message: "must not be empty"
     expression: "this != ''"
   }];
   // Last name of the user.
-  string last_name = 2 [(buf.validate.field).cel = {
+  optional string last_name = 3 [(buf.validate.field).cel = {
     message: "must not be empty"
     expression: "this != ''"
   }];
   // Nickname of the user.
-  string nickname = 3;
+  optional string nickname = 4;
   // Password hash of the user.
-  string password_hash = 4 [(buf.validate.field).cel = {
+  optional string password_hash = 5 [(buf.validate.field).cel = {
     message: "must not be empty"
     expression: "this != ''"
   }, (buf.validate.field).cel = {
@@ -150,7 +195,7 @@ message AddUserRequest {
     expression: "this.size() <= 128"
   }];
   // Email of the user.
-  string email = 5 [(buf.validate.field).cel = {
+  optional string email = 6 [(buf.validate.field).cel = {
     message: "must not be empty"
     expression: "this != ''"
   }, (buf.validate.field).cel = {
@@ -158,24 +203,13 @@ message AddUserRequest {
     expression: "this.isEmail()"
   }];
   // Country of the user.
-  string country = 6 [(buf.validate.field).cel = {
+  optional string country = 7 [(buf.validate.field).cel = {
     message: "must not be empty"
     expression: "this != ''"
   }, (buf.validate.field).cel = {
     message: "must have 2 characters"
     expression: "this.size() == 2"
   }];
-}
-
-message AddUserResponse {
-  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
-    json_schema: {
-      title: "AddUserResponse"
-      description: "Response message from user was added."
-    }
-  };
-  // ID of the user.
-  string id = 1;
 }
 
 /*

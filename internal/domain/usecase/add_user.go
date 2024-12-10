@@ -2,7 +2,6 @@ package usecase
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/bool64/ctxd"
 	"github.com/dohernandez/faceit/internal/domain/model"
@@ -12,7 +11,7 @@ import (
 
 // UserAdder defines functionality to add a user to the data layer.
 type UserAdder interface {
-	AddUser(ctx context.Context, u model.UserState) (*model.User, error)
+	AddUser(ctx context.Context, u *model.User) error
 }
 
 //go:generate mockery --name=UserAddedNotifier --outpkg=mocks --output=mocks --filename=user_added_notifier.go --with-expecter
@@ -40,21 +39,21 @@ func NewAddUser(userAdder UserAdder, notifier UserAddedNotifier, logger ctxd.Log
 }
 
 // AddUser executes the add user use case.
-func (a *AddUser) AddUser(ctx context.Context, us model.UserState) (model.UserID, error) {
-	ctx = ctxd.AddFields(ctx, "use_case", "AddUser")
+func (a *AddUser) AddUser(ctx context.Context, u *model.User) error {
+	ctx = ctxd.AddFields(ctx, "use_case", "AddUser", "user_id", u.ID)
 
-	u, err := a.adder.AddUser(ctx, us)
+	err := a.adder.AddUser(ctx, u)
 	if err != nil {
-		return model.UserID{}, fmt.Errorf("usecase.AddUser: add user: %w", err)
+		return ctxd.WrapError(ctx, err, "add user") // error contains the context fields added
 	}
 
-	a.logger.Debug(ctx, "user added", "user_id", u.ID)
+	a.logger.Debug(ctx, "user added")
 
-	if err := a.notifier.NotifyUserAdded(ctx, u); err != nil {
-		return model.UserID{}, fmt.Errorf("usecase.AddUser: notify user added: %w", err)
+	if err = a.notifier.NotifyUserAdded(ctx, u); err != nil {
+		return ctxd.WrapError(ctx, err, "notify user added")
 	}
 
-	a.logger.Debug(ctx, "user added notification sent", "user_id", u.ID)
+	a.logger.Debug(ctx, "user added notification sent")
 
-	return u.ID, nil
+	return nil
 }
