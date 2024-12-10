@@ -42,6 +42,7 @@ endif
 BUILD_LDFLAGS="-s -w"
 BUILD_PKG = ./cmd/...
 BINARY_NAME = faceit
+EXCLUDE_PACKAGES = /mocks|/cmd|platform/service|platform/app
 
 -include $(DEVSERVICEGO_PATH)/makefiles/lint.mk
 -include $(DEVSERVICEGO_PATH)/makefiles/test-unit.mk
