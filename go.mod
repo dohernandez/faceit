@@ -10,9 +10,9 @@ require (
 	github.com/bool64/sqluct v0.2.4
 	github.com/bufbuild/protovalidate-go v0.7.3
 	github.com/cucumber/godog v0.15.0
-	github.com/dohernandez/dev-grpc v0.5.0
-	github.com/dohernandez/go-grpc-service v0.0.0-20241209154820-e463d7f267fe
-	github.com/dohernandez/servers v0.12.0
+	github.com/dohernandez/dev-grpc v0.6.0
+	github.com/dohernandez/go-grpc-service v0.0.0-20241210135946-ebe7f45b7e0e
+	github.com/dohernandez/servers v0.12.1
 	github.com/google/uuid v1.6.0
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.24.0
 	github.com/jackc/pgconn v1.14.3

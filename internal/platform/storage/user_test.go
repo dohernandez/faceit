@@ -258,3 +258,78 @@ func TestUser_UpdateUser(t *testing.T) {
 		require.Error(t, err)
 	})
 }
+
+func TestUser_DeleteUser(t *testing.T) {
+	t.Parallel()
+
+	userID := uuid.New()
+
+	t.Run("success", func(t *testing.T) {
+		t.Parallel()
+
+		db, mock, err := sqlmock.New(sqlmock.QueryMatcherOption(sqlmock.QueryMatcherEqual))
+		require.NoError(t, err)
+		defer db.Close() //nolint:errcheck
+
+		meQuery := mock.ExpectExec(`
+				DELETE FROM users WHERE id = $1
+			`).
+			WithArgs(userID)
+
+		meQuery.WillReturnResult(sqlmock.NewResult(0, 1))
+
+		st := sqluct.NewStorage(sqlx.NewDb(db, "sqlmock"))
+
+		repo := storage.NewUser(st)
+
+		err = repo.DeleteUser(context.Background(), userID)
+		require.NoError(t, err)
+
+		require.NoError(t, mock.ExpectationsWereMet())
+	})
+
+	t.Run("not found", func(t *testing.T) {
+		t.Parallel()
+
+		db, mock, err := sqlmock.New(sqlmock.QueryMatcherOption(sqlmock.QueryMatcherEqual))
+		require.NoError(t, err)
+		defer db.Close() //nolint:errcheck
+
+		meQuery := mock.ExpectExec(`
+				DELETE FROM users WHERE id = $1
+			`).
+			WithArgs(userID)
+
+		meQuery.WillReturnResult(sqlmock.NewResult(0, 0))
+
+		st := sqluct.NewStorage(sqlx.NewDb(db, "sqlmock"))
+
+		repo := storage.NewUser(st)
+
+		err = repo.DeleteUser(context.Background(), userID)
+		require.Error(t, err)
+		require.ErrorIs(t, err, database.ErrNotFound)
+	})
+
+	t.Run("error", func(t *testing.T) {
+		t.Parallel()
+
+		db, mock, err := sqlmock.New(sqlmock.QueryMatcherOption(sqlmock.QueryMatcherEqual))
+		require.NoError(t, err)
+		defer db.Close() //nolint:errcheck
+
+		meQuery := mock.ExpectExec(`
+				DELETE FROM users WHERE id = $1
+			`).
+			WithArgs(userID)
+
+		meQuery.WillReturnError(&pgconn.PgError{Code: pgerrcode.InternalError})
+
+		st := sqluct.NewStorage(sqlx.NewDb(db, "sqlmock"))
+
+		repo := storage.NewUser(st)
+
+		err = repo.DeleteUser(context.Background(), userID)
+		require.Error(t, err)
+	})
+}

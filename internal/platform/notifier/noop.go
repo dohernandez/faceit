@@ -23,3 +23,8 @@ func (n *NoopNotifier) NotifyUserAdded(_ context.Context, _ *model.User) error {
 func (n *NoopNotifier) NotifyUserUpdated(_ context.Context, _ model.UserID, _ model.UserState) error {
 	return nil
 }
+
+// NotifyUserDeleted does nothing.
+func (n *NoopNotifier) NotifyUserDeleted(_ context.Context, _ model.UserID) error {
+	return nil
+}
