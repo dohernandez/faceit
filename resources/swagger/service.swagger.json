@@ -78,8 +78,8 @@
             "description": "The maximum number of user to return. The service may return fewer than\nthis value.\nIf unspecified, at most 100 users will be returned.\nThe maximum value is 1000; values above 1000 will be coerced to 1000.",
             "in": "query",
             "required": false,
-            "type": "integer",
-            "format": "int32"
+            "type": "string",
+            "format": "uint64"
           },
           {
             "name": "pageToken",
