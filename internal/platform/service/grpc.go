@@ -277,3 +277,29 @@ func (s *FaceitService) DeleteUser(ctx context.Context, req *api.UserID) (*empty
 
 	return &emptypb.Empty{}, nil
 }
+
+// ListUsersByCountry list users by country.
+//
+// Receives a request with country data. Responses with a list of users.
+func (s *FaceitService) ListUsersByCountry(ctx context.Context, req *api.UsersByCountry) (*api.UserList, error) {
+	ctx = ctxd.AddFields(ctx, "service", "FaceitService")
+
+	// Validate request.
+	val, err := protovalidate.New(
+		protovalidate.WithMessages(
+			&api.UserID{},
+		),
+	)
+	if err != nil {
+		return nil, servers.Error(codes.Internal, fmt.Errorf("create proto validator: %w", err), nil)
+	}
+
+	fieldMsgErrs, ok := isUserValid(req, val, false)
+	if !ok {
+		return nil, servers.Error(codes.InvalidArgument, errors.New("validation error"), fieldMsgErrs)
+	}
+
+	// List users by country.
+
+	return nil, nil
+}
