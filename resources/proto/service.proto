@@ -154,6 +154,31 @@ service FaceitService {
       }
     };
   }
+
+  // ListUsersByCountry list users by country.
+  //
+  // Receives a request with country data. Responses a list of users.
+  rpc ListUsersByCountry(UsersByCountry) returns (UserList) {
+    // Client example (Assuming the service is hosted at the given 'DOMAIN_NAME'):
+    // Client example:
+    //   curl http://DOMAIN_NAME/v1/users?country=UK
+    option (google.api.http) = {
+      get : "/v1/users"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      responses: {
+        key: "200"
+        value: {
+          description: "List of users by country paginated."
+          schema: {
+            json_schema: {
+              ref: ".api.faceit.UserList"
+            }
+          }
+        }
+      }
+    };
+  };
 }
 
 message User {
@@ -222,4 +247,52 @@ message UserID {
     message: "must not be empty"
     expression: "this != ''"
   }, (buf.validate.field).string.uuid = true];
+}
+
+message UsersByCountry {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {
+      title: "Users by country"
+      description: "Message represents the search users by country."
+      required: ["country"]
+    }
+  };
+
+  // Country of the user.
+  string country = 1 [(buf.validate.field).cel = {
+    message: "must not be empty"
+    expression: "this != ''"
+  }, (buf.validate.field).cel = {
+    message: "must have 2 characters"
+    expression: "this.size() == 2"
+  }];
+
+  // The maximum number of user to return. The service may return fewer than
+  // this value.
+  // If unspecified, at most 100 users will be returned.
+  // The maximum value is 1000; values above 1000 will be coerced to 1000.
+  int32 page_size = 2;
+
+  // A page token, received from a previous `UserList` call.
+  // Provide this to retrieve the subsequent page.
+  //
+  // When paginating, all other parameters provided to `UserList` must match
+  // the call that provided the page token.
+  string page_token = 3;
+}
+
+message UserList {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {
+      title: "UserListResponse"
+      description: "Response message represent list of users."
+    }
+  };
+
+  // List of users.
+  repeated User users = 1;
+
+  // A token that can be sent as `page_token` to retrieve the next page.
+  // If this field is omitted, there are no subsequent pages.
+  string next_page_token = 2;
 }
