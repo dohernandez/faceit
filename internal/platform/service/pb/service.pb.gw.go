@@ -37,7 +37,7 @@ var (
 
 func request_FaceitService_AddUser_0(ctx context.Context, marshaler runtime.Marshaler, client FaceitServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq UserRequest
+		protoReq User
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
@@ -49,7 +49,7 @@ func request_FaceitService_AddUser_0(ctx context.Context, marshaler runtime.Mars
 
 func local_request_FaceitService_AddUser_0(ctx context.Context, marshaler runtime.Marshaler, server FaceitServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq UserRequest
+		protoReq User
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
@@ -61,7 +61,7 @@ func local_request_FaceitService_AddUser_0(ctx context.Context, marshaler runtim
 
 func request_FaceitService_UpdateUser_0(ctx context.Context, marshaler runtime.Marshaler, client FaceitServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq UserRequest
+		protoReq User
 		metadata runtime.ServerMetadata
 		err      error
 	)
@@ -82,7 +82,7 @@ func request_FaceitService_UpdateUser_0(ctx context.Context, marshaler runtime.M
 
 func local_request_FaceitService_UpdateUser_0(ctx context.Context, marshaler runtime.Marshaler, server FaceitServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq UserRequest
+		protoReq User
 		metadata runtime.ServerMetadata
 		err      error
 	)
@@ -103,7 +103,7 @@ func local_request_FaceitService_UpdateUser_0(ctx context.Context, marshaler run
 
 func request_FaceitService_DeleteUser_0(ctx context.Context, marshaler runtime.Marshaler, client FaceitServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq DeleteUserRequest
+		protoReq UserID
 		metadata runtime.ServerMetadata
 		err      error
 	)
@@ -121,7 +121,7 @@ func request_FaceitService_DeleteUser_0(ctx context.Context, marshaler runtime.M
 
 func local_request_FaceitService_DeleteUser_0(ctx context.Context, marshaler runtime.Marshaler, server FaceitServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq DeleteUserRequest
+		protoReq UserID
 		metadata runtime.ServerMetadata
 		err      error
 	)
