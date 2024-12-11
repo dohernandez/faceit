@@ -56,25 +56,25 @@ func NewFaceitService(deps FaceitServiceDeps) *FaceitService {
 // AddUser add new user.
 //
 // Receives a request with user data. Responses whether the user was added successfully or not.
-func (s *FaceitService) AddUser(ctx context.Context, req *api.UserRequest) (*emptypb.Empty, error) {
+func (s *FaceitService) AddUser(ctx context.Context, req *api.User) (*emptypb.Empty, error) {
 	ctx = ctxd.AddFields(ctx, "service", "FaceitService")
 
 	// Validate request.
 	val, err := protovalidate.New(
 		protovalidate.WithMessages(
-			&api.UserRequest{},
+			&api.User{},
 		),
 	)
 	if err != nil {
 		return nil, servers.Error(codes.Internal, fmt.Errorf("create proto validator: %w", err), nil)
 	}
 
-	fieldMsgErrs, ok := isUserRequestValid(req, val, true)
+	fieldMsgErrs, ok := isUserValid(req, val, true)
 	if !ok {
 		return nil, servers.Error(codes.InvalidArgument, errors.New("validation error"), fieldMsgErrs)
 	}
 
-	// Extra validation since UserRequest proto message only have ID as required field.
+	// Extra validation since User proto message only have ID as required field.
 	//
 
 	// Add user.
@@ -104,14 +104,14 @@ func (s *FaceitService) AddUser(ctx context.Context, req *api.UserRequest) (*emp
 	return &emptypb.Empty{}, nil
 }
 
-func isUserRequestValid(msg proto.Message, val *protovalidate.Validator, forAdd bool) (map[string]string, bool) {
+func isUserValid(msg proto.Message, val *protovalidate.Validator, forAdd bool) (map[string]string, bool) {
 	fields := make(map[string]string)
 
 	if err := val.Validate(msg); err != nil {
 		fields = mapValidatorError(err)
 	}
 
-	req, ok := msg.(*api.UserRequest)
+	req, ok := msg.(*api.User)
 	if !ok {
 		return fields, len(fields) == 0
 	}
@@ -189,20 +189,20 @@ type UpdateUser interface {
 // UpdateUser update the user.
 //
 // Receives a request with user data. Responses whether the user was updated successfully or not.
-func (s *FaceitService) UpdateUser(ctx context.Context, req *api.UserRequest) (*emptypb.Empty, error) {
+func (s *FaceitService) UpdateUser(ctx context.Context, req *api.User) (*emptypb.Empty, error) {
 	ctx = ctxd.AddFields(ctx, "service", "FaceitService")
 
 	// Validate request.
 	val, err := protovalidate.New(
 		protovalidate.WithMessages(
-			&api.UserRequest{},
+			&api.User{},
 		),
 	)
 	if err != nil {
 		return nil, servers.Error(codes.Internal, fmt.Errorf("create proto validator: %w", err), nil)
 	}
 
-	fieldMsgErrs, ok := isUserRequestValid(req, val, false)
+	fieldMsgErrs, ok := isUserValid(req, val, false)
 	if !ok {
 		return nil, servers.Error(codes.InvalidArgument, errors.New("validation error"), fieldMsgErrs)
 	}
@@ -245,20 +245,20 @@ type DeleteUser interface {
 // DeleteUser delete the user.
 //
 // Receives a request with user data. Responses whether the user was deleted successfully or not.
-func (s *FaceitService) DeleteUser(ctx context.Context, req *api.DeleteUserRequest) (*emptypb.Empty, error) {
+func (s *FaceitService) DeleteUser(ctx context.Context, req *api.UserID) (*emptypb.Empty, error) {
 	ctx = ctxd.AddFields(ctx, "service", "FaceitService")
 
 	// Validate request.
 	val, err := protovalidate.New(
 		protovalidate.WithMessages(
-			&api.DeleteUserRequest{},
+			&api.UserID{},
 		),
 	)
 	if err != nil {
 		return nil, servers.Error(codes.Internal, fmt.Errorf("create proto validator: %w", err), nil)
 	}
 
-	fieldMsgErrs, ok := isUserRequestValid(req, val, false)
+	fieldMsgErrs, ok := isUserValid(req, val, false)
 	if !ok {
 		return nil, servers.Error(codes.InvalidArgument, errors.New("validation error"), fieldMsgErrs)
 	}

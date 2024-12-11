@@ -71,11 +71,11 @@
         "parameters": [
           {
             "name": "body",
-            "description": "Request message represent user.",
+            "description": "Message represents user.",
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/faceitUserRequest"
+              "$ref": "#/definitions/faceitUser"
             }
           }
         ],
@@ -250,10 +250,10 @@
           "description": "Country of the user."
         }
       },
-      "description": "Request message represent user.",
-      "title": "UserRequest"
+      "description": "Message represents user.",
+      "title": "User"
     },
-    "faceitUserRequest": {
+    "faceitUser": {
       "type": "object",
       "properties": {
         "id": {
@@ -285,8 +285,8 @@
           "description": "Country of the user."
         }
       },
-      "description": "Request message represent user.",
-      "title": "UserRequest",
+      "description": "Message represents user.",
+      "title": "User",
       "required": [
         "id"
       ]

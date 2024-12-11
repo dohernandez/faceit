@@ -55,7 +55,7 @@ service FaceitService {
   // AddUser add new user.
   //
   // Receives a request with user data. Responses whether the user was added successfully or not.
-  rpc AddUser(UserRequest) returns (google.protobuf.Empty) {
+  rpc AddUser(User) returns (google.protobuf.Empty) {
     // Client example (Assuming the service is hosted at the given 'DOMAIN_NAME'):
     // Client example:
     //   curl -d '{"first_name": "Alice", "last_name": "Bob", "nickname": "AB123", "password_hash": "supersecurepassword", "email": "alice@bob.com", "country": "UK"}' http://DOMAIN_NAME/v1/users
@@ -85,7 +85,7 @@ service FaceitService {
   // Update the user.
   //
   // Receives a request with user data. Responses whether the user was updated successfully or not.
-  rpc UpdateUser(UserRequest) returns (google.protobuf.Empty) {
+  rpc UpdateUser(User) returns (google.protobuf.Empty) {
     // Client example (Assuming the service is hosted at the given 'DOMAIN_NAME'):
     // Client example:
     //   curl -X PATCH -d '{"first_name": "Alice", "last_name": "Bob", "nickname": "AB123", "country": "UK"}' http://DOMAIN_NAME/v1/users/26ef0140-c436-4838-a271-32652c72f6f2
@@ -122,13 +122,12 @@ service FaceitService {
   // Delete the user.
   //
   // Receives a request with user data id. Responses whether the user was deleted successfully or not.
-  rpc DeleteUser(DeleteUserRequest) returns (google.protobuf.Empty) {
+  rpc DeleteUser(UserID) returns (google.protobuf.Empty) {
     // Client example (Assuming the service is hosted at the given 'DOMAIN_NAME'):
     // Client example:
     //   curl -X DELETE http://DOMAIN_NAME/v1/users/26ef0140-c436-4838-a271-32652c72f6f2
     option (google.api.http) = {
       delete : "/v1/users/{id}"
-      body : "*"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       responses: {
@@ -155,52 +154,13 @@ service FaceitService {
       }
     };
   }
-/*
-  // GetFuncName.
-  //
-  // Receives a request with ... . Responses ... .
-  rpc GetFuncName(GetFuncRequest) returns (GetFuncResponse) {
-    // Client example (Assuming the service is hosted at the given 'DOMAIN_NAME'):
-    // Client example:
-    //   curl http://DOMAIN_NAME/resource/name
-    option (google.api.http) = {
-      get : "/v1/resource/name"
-    };
-    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      responses: {
-        key: "200"
-        value: {
-          examples: {
-            key: "application/json"
-            value: '{}'
-          }
-          schema: {
-            json_schema: {
-              ref: ".kit.template.GetFuncNameResponse"
-            }
-          }
-        }
-      }
-      responses: {
-        key: "404"
-        value: {
-          description: "Not found response."
-          schema: {
-            json_schema: {
-              ref: ".google.rpc.Status"
-            }
-          }
-        }
-      }
-    };
-  }*/
 }
 
-message UserRequest {
+message User {
   option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
     json_schema: {
-      title: "UserRequest"
-      description: "Request message represent user."
+      title: "User"
+      description: "Message represents user."
       required: ["id"]
     }
   };
@@ -249,12 +209,11 @@ message UserRequest {
   }];
 }
 
-message DeleteUserRequest {
+message UserID {
   option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
     json_schema: {
-      title: "DeleteUserRequest"
-      description: "Request message to delete user."
-      required: ["id"]
+      title: "UserID"
+      description: "Message represent user id."
     }
   };
 
@@ -264,42 +223,3 @@ message DeleteUserRequest {
     expression: "this != ''"
   }, (buf.validate.field).string.uuid = true];
 }
-
-/*
-message GetFuncRequest {
-  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
-    json_schema: {
-      title: "GetFuncRequest"
-      description: "Request message to ... ."
-      required: []
-    }
-  };
-  // ... .
-  string getParam1 = 1;
-}
-
-message GetFuncResponse {
-  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
-    json_schema: {
-      title: "GetFuncResponse"
-      description: "Response message from ... ."
-    }
-  };
-
-  // rows
-  repeated RepeatedRow rows = 1;
-
-  message RepeatedRow {
-    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
-      json_schema: {
-        title: "RepeatedRow"
-        description: "... ."
-      }
-    };
-    // ... .
-    string responseValue1 = 1;
-    // ... .
-    int64 responseValue2 = 2;
-  }
-}
-*/
