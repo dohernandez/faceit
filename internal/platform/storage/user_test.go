@@ -333,3 +333,60 @@ func TestUser_DeleteUser(t *testing.T) {
 		require.Error(t, err)
 	})
 }
+
+func TestUser_ListByCountry(t *testing.T) {
+	t.Parallel()
+
+	t.Run("success", func(t *testing.T) {
+		t.Parallel()
+
+		db, mock, err := sqlmock.New(sqlmock.QueryMatcherOption(sqlmock.QueryMatcherEqual))
+		require.NoError(t, err)
+		defer db.Close() //nolint:errcheck
+
+		meQuery := mock.ExpectQuery(`
+				SELECT id, created_at, updated_at, password_hash, email, first_name, last_name, nickname, country FROM users WHERE country = $1 LIMIT 100 OFFSET 0
+			`).
+			WithArgs("UK")
+
+		rows := sqlmock.NewRows([]string{"id"}).
+			AddRow(uuid.New()).
+			AddRow(uuid.New())
+
+		meQuery.WillReturnRows(rows)
+
+		st := sqluct.NewStorage(sqlx.NewDb(db, "sqlmock"))
+
+		repo := storage.NewUser(st)
+
+		users, err := repo.ListByCountry(context.Background(), "UK", 100, 0)
+		require.NoError(t, err)
+
+		require.Len(t, users, 2)
+
+		require.NoError(t, mock.ExpectationsWereMet())
+	})
+
+	t.Run("error", func(t *testing.T) {
+		t.Parallel()
+
+		db, mock, err := sqlmock.New(sqlmock.QueryMatcherOption(sqlmock.QueryMatcherEqual))
+		require.NoError(t, err)
+		defer db.Close() //nolint:errcheck
+
+		meQuery := mock.ExpectQuery(`
+				SELECT id, created_at, updated_at, password_hash, email, first_name, last_name, nickname, country FROM users WHERE country = $1 LIMIT 100 OFFSET 0
+			`).
+			WithArgs("UK")
+
+		meQuery.WillReturnError(&pgconn.PgError{Code: pgerrcode.InternalError})
+
+		st := sqluct.NewStorage(sqlx.NewDb(db, "sqlmock"))
+
+		repo := storage.NewUser(st)
+
+		users, err := repo.ListByCountry(context.Background(), "UK", 100, 0)
+		require.Error(t, err)
+		require.Nil(t, users)
+	})
+}

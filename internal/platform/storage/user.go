@@ -101,3 +101,19 @@ func (s *User) DeleteUser(ctx context.Context, id model.UserID) error {
 
 	return nil
 }
+
+// ListByCountry lists users by country.
+func (s *User) ListByCountry(ctx context.Context, country string, limit, offset uint64) ([]*model.User, error) {
+	q := s.storage.SelectStmt(UserTable, model.User{}).
+		Where(squirrel.Eq{s.colCountry: country}).
+		Limit(limit).Offset(offset)
+
+	var users []*model.User
+
+	err := s.storage.Select(ctx, q, &users)
+	if err != nil {
+		return nil, err
+	}
+
+	return users, nil
+}
