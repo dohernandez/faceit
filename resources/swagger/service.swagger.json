@@ -21,6 +21,78 @@
   ],
   "paths": {
     "/v1/users": {
+      "get": {
+        "summary": "ListUsersByCountry list users by country.",
+        "description": "Receives a request with country data. Responses a list of users.",
+        "operationId": "FaceitService_ListUsersByCountry",
+        "responses": {
+          "200": {
+            "description": "List of users by country paginated.",
+            "schema": {
+              "$ref": "#/definitions/faceitUserList"
+            }
+          },
+          "400": {
+            "description": "Bad Request.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            },
+            "examples": {
+              "application/json": {
+                "code": 400,
+                "message": "Bad Request",
+                "error": "Invalid argument",
+                "details": [
+                  {
+                    "field": "field",
+                    "description": "invalid"
+                  }
+                ]
+              }
+            }
+          },
+          "500": {
+            "description": "Internal error.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            },
+            "examples": {
+              "application/json": {
+                "code": 500,
+                "message": "message",
+                "error": "error_id_uuid"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "country",
+            "description": "Country of the user.",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "pageSize",
+            "description": "The maximum number of user to return. The service may return fewer than\nthis value.\nIf unspecified, at most 100 users will be returned.\nThe maximum value is 1000; values above 1000 will be coerced to 1000.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "uint64"
+          },
+          {
+            "name": "pageToken",
+            "description": "A page token, received from a previous `UserList` call.\nProvide this to retrieve the subsequent page.\n\nWhen paginating, all other parameters provided to `UserList` must match\nthe call that provided the page token.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "FaceitService"
+        ]
+      },
       "post": {
         "summary": "AddUser add new user.",
         "description": "Receives a request with user data. Responses whether the user was added successfully or not.",
@@ -225,11 +297,11 @@
     "FaceitServiceUpdateUserBody": {
       "type": "object",
       "properties": {
-        "firstName": {
+        "first_name": {
           "type": "string",
           "description": "First name of the user."
         },
-        "lastName": {
+        "last_name": {
           "type": "string",
           "description": "Last name of the user."
         },
@@ -237,7 +309,7 @@
           "type": "string",
           "description": "Nickname of the user."
         },
-        "passwordHash": {
+        "password_hash": {
           "type": "string",
           "description": "Password hash of the user."
         },
@@ -260,11 +332,11 @@
           "type": "string",
           "description": "ID of the user."
         },
-        "firstName": {
+        "first_name": {
           "type": "string",
           "description": "First name of the user."
         },
-        "lastName": {
+        "last_name": {
           "type": "string",
           "description": "Last name of the user."
         },
@@ -272,7 +344,7 @@
           "type": "string",
           "description": "Nickname of the user."
         },
-        "passwordHash": {
+        "password_hash": {
           "type": "string",
           "description": "Password hash of the user."
         },
@@ -290,6 +362,25 @@
       "required": [
         "id"
       ]
+    },
+    "faceitUserList": {
+      "type": "object",
+      "properties": {
+        "users": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/faceitUser"
+          },
+          "description": "List of users."
+        },
+        "nextPageToken": {
+          "type": "string",
+          "description": "A token that can be sent as `page_token` to retrieve the next page.\nIf this field is omitted, there are no subsequent pages."
+        }
+      },
+      "description": "Response message represent list of users.",
+      "title": "UserListResponse"
     },
     "protobufAny": {
       "type": "object",

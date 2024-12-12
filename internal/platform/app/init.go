@@ -25,9 +25,10 @@ type Locator struct {
 	storageUser *storage.User
 
 	// use cases
-	ucAddUser    *usecase.AddUser
-	ucUpdateUser *usecase.UpdateUser
-	usDeleteUser *usecase.DeleteUser
+	ucAddUser           *usecase.AddUser
+	ucUpdateUser        *usecase.UpdateUser
+	usDeleteUser        *usecase.DeleteUser
+	usListUserByCountry *usecase.ListUsersByCountry
 }
 
 // NewServiceLocator creates application locator.
@@ -64,18 +65,6 @@ func NewServiceLocator(cfg *config.Config, opts ...sapp.Option) (*Locator, error
 	return l, nil
 }
 
-// setupStorage sets up storage dependencies (platform).
-func (l *Locator) setupStorage() {
-	l.storageUser = storage.NewUser(l.Storage)
-}
-
-// setupUsecaseDependencies sets up use case dependencies (domain).
-func (l *Locator) setupUsecaseDependencies() {
-	l.ucAddUser = usecase.NewAddUser(l.storageUser, l.notifierUser, l.CtxdLogger())
-	l.ucUpdateUser = usecase.NewUpdateUser(l.storageUser, l.notifierUser, l.CtxdLogger())
-	l.usDeleteUser = usecase.NewDeleteUser(l.storageUser, l.notifierUser, l.CtxdLogger())
-}
-
 func (l *Locator) setupServices() error {
 	l.InitGRPCService(
 		servers.WithRegisterService(l.FaceitService),
@@ -98,6 +87,19 @@ func (l *Locator) setupServices() error {
 	return nil
 }
 
+// setupStorage sets up storage dependencies (platform).
+func (l *Locator) setupStorage() {
+	l.storageUser = storage.NewUser(l.Storage)
+}
+
+// setupUsecaseDependencies sets up use case dependencies (domain).
+func (l *Locator) setupUsecaseDependencies() {
+	l.ucAddUser = usecase.NewAddUser(l.storageUser, l.notifierUser, l.CtxdLogger())
+	l.ucUpdateUser = usecase.NewUpdateUser(l.storageUser, l.notifierUser, l.CtxdLogger())
+	l.usDeleteUser = usecase.NewDeleteUser(l.storageUser, l.notifierUser, l.CtxdLogger())
+	l.usListUserByCountry = usecase.NewListUsersByCountry(l.storageUser, l.CtxdLogger())
+}
+
 // AddUser returns the usecase.AddUser use case.
 func (l *Locator) AddUser() service.AddUser {
 	return l.ucAddUser
@@ -111,4 +113,9 @@ func (l *Locator) UpdateUser() service.UpdateUser {
 // DeleteUser returns the usecase.DeleteUser use case.
 func (l *Locator) DeleteUser() service.DeleteUser {
 	return l.usDeleteUser
+}
+
+// ListUsersByCountry returns the usecase.ListUsersByCountry use case.
+func (l *Locator) ListUsersByCountry() service.ListUsersByCountry {
+	return l.usListUserByCountry
 }

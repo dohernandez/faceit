@@ -20,9 +20,10 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	FaceitService_AddUser_FullMethodName    = "/api.faceit.FaceitService/AddUser"
-	FaceitService_UpdateUser_FullMethodName = "/api.faceit.FaceitService/UpdateUser"
-	FaceitService_DeleteUser_FullMethodName = "/api.faceit.FaceitService/DeleteUser"
+	FaceitService_AddUser_FullMethodName            = "/api.faceit.FaceitService/AddUser"
+	FaceitService_UpdateUser_FullMethodName         = "/api.faceit.FaceitService/UpdateUser"
+	FaceitService_DeleteUser_FullMethodName         = "/api.faceit.FaceitService/DeleteUser"
+	FaceitService_ListUsersByCountry_FullMethodName = "/api.faceit.FaceitService/ListUsersByCountry"
 )
 
 // FaceitServiceClient is the client API for FaceitService service.
@@ -43,6 +44,10 @@ type FaceitServiceClient interface {
 	//
 	// Receives a request with user data id. Responses whether the user was deleted successfully or not.
 	DeleteUser(ctx context.Context, in *UserID, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// ListUsersByCountry list users by country.
+	//
+	// Receives a request with country data. Responses a list of users.
+	ListUsersByCountry(ctx context.Context, in *UsersByCountry, opts ...grpc.CallOption) (*UserList, error)
 }
 
 type faceitServiceClient struct {
@@ -83,6 +88,16 @@ func (c *faceitServiceClient) DeleteUser(ctx context.Context, in *UserID, opts .
 	return out, nil
 }
 
+func (c *faceitServiceClient) ListUsersByCountry(ctx context.Context, in *UsersByCountry, opts ...grpc.CallOption) (*UserList, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UserList)
+	err := c.cc.Invoke(ctx, FaceitService_ListUsersByCountry_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // FaceitServiceServer is the server API for FaceitService service.
 // All implementations must embed UnimplementedFaceitServiceServer
 // for forward compatibility.
@@ -101,6 +116,10 @@ type FaceitServiceServer interface {
 	//
 	// Receives a request with user data id. Responses whether the user was deleted successfully or not.
 	DeleteUser(context.Context, *UserID) (*emptypb.Empty, error)
+	// ListUsersByCountry list users by country.
+	//
+	// Receives a request with country data. Responses a list of users.
+	ListUsersByCountry(context.Context, *UsersByCountry) (*UserList, error)
 	mustEmbedUnimplementedFaceitServiceServer()
 }
 
@@ -119,6 +138,9 @@ func (UnimplementedFaceitServiceServer) UpdateUser(context.Context, *User) (*emp
 }
 func (UnimplementedFaceitServiceServer) DeleteUser(context.Context, *UserID) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteUser not implemented")
+}
+func (UnimplementedFaceitServiceServer) ListUsersByCountry(context.Context, *UsersByCountry) (*UserList, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListUsersByCountry not implemented")
 }
 func (UnimplementedFaceitServiceServer) mustEmbedUnimplementedFaceitServiceServer() {}
 func (UnimplementedFaceitServiceServer) testEmbeddedByValue()                       {}
@@ -195,6 +217,24 @@ func _FaceitService_DeleteUser_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
+func _FaceitService_ListUsersByCountry_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UsersByCountry)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FaceitServiceServer).ListUsersByCountry(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: FaceitService_ListUsersByCountry_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FaceitServiceServer).ListUsersByCountry(ctx, req.(*UsersByCountry))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // FaceitService_ServiceDesc is the grpc.ServiceDesc for FaceitService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -213,6 +253,10 @@ var FaceitService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteUser",
 			Handler:    _FaceitService_DeleteUser_Handler,
+		},
+		{
+			MethodName: "ListUsersByCountry",
+			Handler:    _FaceitService_ListUsersByCountry_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
