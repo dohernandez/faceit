@@ -11,7 +11,7 @@ require (
 	github.com/bufbuild/protovalidate-go v0.7.3
 	github.com/cucumber/godog v0.15.0
 	github.com/dohernandez/dev-grpc v0.6.0
-	github.com/dohernandez/go-grpc-service v0.0.0-20241212220022-a7e2de370de5
+	github.com/dohernandez/go-grpc-service v0.0.0-20241212223738-0a0c3846d5cc
 	github.com/dohernandez/servers v0.12.1
 	github.com/google/uuid v1.6.0
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.24.0
