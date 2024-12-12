@@ -271,7 +271,7 @@ message UsersByCountry {
   // this value.
   // If unspecified, at most 100 users will be returned.
   // The maximum value is 1000; values above 1000 will be coerced to 1000.
-  optional uint64 page_size = 2 [(buf.validate.field).cel = {
+  optional uint64 page_size = 2 [json_name="page_size", (buf.validate.field).cel = {
     message: "must be between 1 and 1000"
     expression: "this => 1 && this <= 1000"
   }];
@@ -281,7 +281,7 @@ message UsersByCountry {
   //
   // When paginating, all other parameters provided to `UserList` must match
   // the call that provided the page token.
-  string page_token = 3;
+  string page_token = 3 [json_name="page_token"];
 }
 
 message UserList {
@@ -297,5 +297,5 @@ message UserList {
 
   // A token that can be sent as `page_token` to retrieve the next page.
   // If this field is omitted, there are no subsequent pages.
-  string next_page_token = 2;
+  string next_page_token = 2 [json_name="next_page_token"];
 }
