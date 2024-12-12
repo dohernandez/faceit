@@ -20,7 +20,7 @@ func TestListUserByCountry_ListByCountry(t *testing.T) {
 		t.Parallel()
 
 		finder := mocks.NewUserByCountryFinder(t)
-		finder.EXPECT().ListByCountry(mock.Anything, "UK", 100, 0).Return([]*model.User{
+		finder.EXPECT().ListByCountry(mock.Anything, "UK", uint64(100), uint64(0)).Return([]*model.User{
 			{
 				ID: uuid.New(),
 			},
@@ -31,9 +31,9 @@ func TestListUserByCountry_ListByCountry(t *testing.T) {
 
 		logger := &ctxd.LoggerMock{}
 
-		uc := NewListUserByCountry(finder, logger)
+		uc := NewListUsersByCountry(finder, logger)
 
-		users, err := uc.ListByCountry(context.Background(), "UK", 100, 0)
+		users, err := uc.ListUsersByCountry(context.Background(), "UK", 100, 0)
 		require.NoError(t, err)
 
 		require.Len(t, users, 2)
@@ -43,13 +43,13 @@ func TestListUserByCountry_ListByCountry(t *testing.T) {
 		t.Parallel()
 
 		finder := mocks.NewUserByCountryFinder(t)
-		finder.EXPECT().ListByCountry(mock.Anything, "UK", 100, 0).Return(nil, assert.AnError)
+		finder.EXPECT().ListByCountry(mock.Anything, "UK", uint64(100), uint64(0)).Return(nil, assert.AnError)
 
 		logger := &ctxd.LoggerMock{}
 
-		uc := NewListUserByCountry(finder, logger)
+		uc := NewListUsersByCountry(finder, logger)
 
-		users, err := uc.ListByCountry(context.Background(), "UK", 100, 0)
+		users, err := uc.ListUsersByCountry(context.Background(), "UK", 100, 0)
 		require.Error(t, err)
 		require.Nil(t, users)
 		require.ErrorIs(t, err, assert.AnError)

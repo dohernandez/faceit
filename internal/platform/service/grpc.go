@@ -299,7 +299,7 @@ func (s *FaceitService) ListUsersByCountry(ctx context.Context, req *api.UsersBy
 	// Validate request.
 	val, err := protovalidate.New(
 		protovalidate.WithMessages(
-			&api.UserID{},
+			&api.UsersByCountry{},
 		),
 	)
 	if err != nil {
@@ -329,7 +329,7 @@ func (s *FaceitService) ListUsersByCountry(ctx context.Context, req *api.UsersBy
 	}
 
 	// List users by country.
-	users, err := s.deps.ListUsersByCountry().ListUsersByCountry(ctx, req.GetCountry(), req.GetPageSize(), offset)
+	users, err := s.deps.ListUsersByCountry().ListUsersByCountry(ctx, req.GetCountry(), limit, offset)
 	if err != nil {
 		return nil, servers.Error(codes.Internal, err, nil)
 	}
@@ -337,12 +337,12 @@ func (s *FaceitService) ListUsersByCountry(ctx context.Context, req *api.UsersBy
 	// Prepare next page token
 	nextPageToken := ""
 
-	if len(users) == int(limit) {
+	if len(users) == int(limit) { //nolint:gosec // It is safe to ignore as it is not a security issue
 		nextPageToken = strconv.FormatUint(offset+limit, 10)
 	}
 
 	// Map users to response users.
-	var list []*api.User
+	list := make([]*api.User, 0, len(users))
 
 	for _, u := range users {
 		list = append(list, &api.User{

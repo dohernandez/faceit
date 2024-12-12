@@ -197,19 +197,19 @@ message User {
   }, (buf.validate.field).string.uuid = true];
 
   // First name of the user.
-  optional string first_name = 2 [(buf.validate.field).cel = {
+  optional string first_name = 2 [json_name="first_name", (buf.validate.field).cel = {
     message: "must not be empty"
     expression: "this != ''"
   }];
   // Last name of the user.
-  optional string last_name = 3 [(buf.validate.field).cel = {
+  optional string last_name = 3 [json_name="last_name", (buf.validate.field).cel = {
     message: "must not be empty"
     expression: "this != ''"
   }];
   // Nickname of the user.
   optional string nickname = 4;
   // Password hash of the user.
-  optional string password_hash = 5 [(buf.validate.field).cel = {
+  optional string password_hash = 5 [json_name="password_hash", (buf.validate.field).cel = {
     message: "must not be empty"
     expression: "this != ''"
   }, (buf.validate.field).cel = {
@@ -271,7 +271,10 @@ message UsersByCountry {
   // this value.
   // If unspecified, at most 100 users will be returned.
   // The maximum value is 1000; values above 1000 will be coerced to 1000.
-  int32 page_size = 2;
+  optional uint64 page_size = 2 [(buf.validate.field).cel = {
+    message: "must be between 1 and 1000"
+    expression: "this => 1 && this <= 1000"
+  }];
 
   // A page token, received from a previous `UserList` call.
   // Provide this to retrieve the subsequent page.
