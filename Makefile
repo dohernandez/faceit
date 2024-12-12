@@ -37,13 +37,13 @@ endif
 # Add your include here with based path to the module.
 
 -include $(DEVGO_PATH)/makefiles/build.mk
--include $(DEVGO_PATH)/makefiles/bench.mk
 
 BUILD_LDFLAGS="-s -w"
 BUILD_PKG = ./cmd/...
 BINARY_NAME = faceit
 EXCLUDE_PACKAGES = /mocks|/cmd|platform/service|platform/app
 
+-include $(DEVSERVICEGO_PATH)/makefiles/bench.mk
 -include $(DEVSERVICEGO_PATH)/makefiles/lint.mk
 -include $(DEVSERVICEGO_PATH)/makefiles/test-unit.mk
 -include $(DEVSERVICEGO_PATH)/makefiles/dep.mk

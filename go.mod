@@ -11,7 +11,7 @@ require (
 	github.com/bufbuild/protovalidate-go v0.7.3
 	github.com/cucumber/godog v0.15.0
 	github.com/dohernandez/dev-grpc v0.6.0
-	github.com/dohernandez/go-grpc-service v0.0.0-20241212001656-c1df62547f31
+	github.com/dohernandez/go-grpc-service v0.0.0-20241212220022-a7e2de370de5
 	github.com/dohernandez/servers v0.12.1
 	github.com/google/uuid v1.6.0
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.24.0
@@ -42,12 +42,12 @@ require (
 	github.com/cucumber/gherkin/go/v26 v26.2.0 // indirect
 	github.com/cucumber/messages/go/v21 v21.0.1 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
-	github.com/dohernandez/goservicing v1.0.1 // indirect
+	github.com/dohernandez/goservicing v1.0.3 // indirect
 	github.com/go-chi/chi/v5 v5.1.0 // indirect
 	github.com/gofrs/uuid v4.4.0+incompatible // indirect
 	github.com/golang/groupcache v0.0.0-20241129210726-2c02b8208cf8 // indirect
 	github.com/google/cel-go v0.22.1 // indirect
-	github.com/grpc-ecosystem/go-grpc-middleware/v2 v2.1.0 // indirect
+	github.com/grpc-ecosystem/go-grpc-middleware/v2 v2.2.0 // indirect
 	github.com/grpc-ecosystem/go-grpc-prometheus v1.2.0 // indirect
 	github.com/hashicorp/go-immutable-radix v1.3.1 // indirect
 	github.com/hashicorp/go-memdb v1.3.4 // indirect
@@ -85,7 +85,7 @@ require (
 	github.com/swaggest/rest v0.2.70 // indirect
 	github.com/swaggest/swgui v1.8.2 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
-	github.com/valyala/fasthttp v1.57.0 // indirect
+	github.com/valyala/fasthttp v1.58.0 // indirect
 	github.com/vearutop/dynhist-go v1.2.3 // indirect
 	github.com/yosuke-furukawa/json5 v0.1.2-0.20201207051438-cf7bb3f354ff // indirect
 	github.com/yudai/gojsondiff v1.0.0 // indirect
