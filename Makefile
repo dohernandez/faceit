@@ -83,20 +83,6 @@ proto-gen: proto-gen-code-swagger-plugin proto-gen-code
 check-envfile:
 	@test ! -f .env && echo "Please create .env file before. Run \`make envfile\`." && exit 1 || true
 
-## Run docker-compose up for app profile
-dc-up-app: check-envfile
-	@echo "Starting docker compose for application."
-	@DOCKER_COMPOSE_PROFILE=app  \
-	DOCKER_COMPOSE_PATH="docker-compose.yml docker-compose.app.yml" \
-	make dc-up
-
-## Run docker-compose down for app profile
-dc-down-app: check-envfile
-	@echo "Stopping docker compose for application."
-	@DOCKER_COMPOSE_PROFILE=app \
-    DOCKER_COMPOSE_PATH="docker-compose.yml docker-compose.app.yml" \
-    make dc-down
-
 ## Run docker-compose up for dev profile
 dc-up-dev: check-envfile
 	@echo "Starting docker compose for development."
