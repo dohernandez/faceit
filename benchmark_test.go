@@ -3,8 +3,12 @@ package faceit_test
 import (
 	"context"
 	"fmt"
+	"github.com/dohernandez/faceit/internal/domain/model"
+	"github.com/dohernandez/faceit/internal/platform/storage"
+	"github.com/google/uuid"
 	"io"
 	"net"
+	"net/http"
 	"testing"
 
 	"github.com/bool64/ctxd"
@@ -56,9 +60,21 @@ func BenchmarkIntegration(b *testing.B) {
 		Locator: deps.Locator,
 		TestCases: []service.BenchmarkCases{
 			{
-				Name: "test case name",
-				Uri:  "/uri",
-				Data: nil, // map[string]any
+				Name:         "get list by country",
+				Uri:          "/v1/users?country=UK",
+				ResponseCode: http.StatusOK,
+				Data: map[string]any{
+					storage.UserTable: model.User{
+						ID: uuid.MustParse("26ef0140-c436-4838-a271-32652c72f6f2"),
+						UserState: model.UserState{
+							FirstName:    "Alice",
+							LastName:     "Bob",
+							PasswordHash: "f6b7e19e0d867de6c0391879050e8297165728d89d7c4e9e8839972b356c4d9d",
+							Email:        "alice@bob.com",
+							Country:      "UK",
+						},
+					},
+				},
 			},
 		},
 	})

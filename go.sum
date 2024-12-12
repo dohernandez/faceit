@@ -147,8 +147,16 @@ github.com/dohernandez/go-grpc-service v0.0.0-20241211232146-4260bc9522ba h1:Bqx
 github.com/dohernandez/go-grpc-service v0.0.0-20241211232146-4260bc9522ba/go.mod h1:p4+dWqp3Y1YZusYd6bwkb/s0Jxm+f1UwhzGseQ8EDn0=
 github.com/dohernandez/go-grpc-service v0.0.0-20241212001656-c1df62547f31 h1:5gUdG1w/J0ppl1P07C5t5pgg/QKoZk6DvH8ViNfcdHk=
 github.com/dohernandez/go-grpc-service v0.0.0-20241212001656-c1df62547f31/go.mod h1:p4+dWqp3Y1YZusYd6bwkb/s0Jxm+f1UwhzGseQ8EDn0=
+github.com/dohernandez/go-grpc-service v0.0.0-20241212170006-5f9e795005d6 h1:4aaVLjcB7zbT+PbZToh3ZlA+VcAvrdrpHh7At3PZuAs=
+github.com/dohernandez/go-grpc-service v0.0.0-20241212170006-5f9e795005d6/go.mod h1:p4+dWqp3Y1YZusYd6bwkb/s0Jxm+f1UwhzGseQ8EDn0=
+github.com/dohernandez/go-grpc-service v0.0.0-20241212213537-4f3f7d9fcf92 h1:/lriCvSvwuuH/ZgWixOFHBaQKwHNXF2Jr36uj7TTINc=
+github.com/dohernandez/go-grpc-service v0.0.0-20241212213537-4f3f7d9fcf92/go.mod h1:WdpfwLsZ3g8uJcwSb7Nn/t1VVSf1qqFfbnI4T3MJsUQ=
+github.com/dohernandez/go-grpc-service v0.0.0-20241212220022-a7e2de370de5 h1:1e7ihG11RUr3yTUo8I9g/6wPosrR0EtY9r6h7lV3s+w=
+github.com/dohernandez/go-grpc-service v0.0.0-20241212220022-a7e2de370de5/go.mod h1:WdpfwLsZ3g8uJcwSb7Nn/t1VVSf1qqFfbnI4T3MJsUQ=
 github.com/dohernandez/goservicing v1.0.1 h1:DNUZqjD1RwLQ5kGDRHLufkA5WqiOFAavTAwk8q0P7cM=
 github.com/dohernandez/goservicing v1.0.1/go.mod h1:2sr8jiJyr6+j9EdKxhJboZdtJ0SXZM6ZTz2mo9ubSKM=
+github.com/dohernandez/goservicing v1.0.3 h1:XpvhWClVi8rpv6BwQp1jZfn9rwZ4LoV9YwP7Z9LDR4g=
+github.com/dohernandez/goservicing v1.0.3/go.mod h1:KRXcSxfP7Bvke7iKtjBMjGLSoOxONoqiPV2y7Mb84fM=
 github.com/dohernandez/servers v0.12.0 h1:OKkV24YZotPgZCRoM34FF46vpK3Ts6NWAe/jwsLDmT8=
 github.com/dohernandez/servers v0.12.0/go.mod h1:vGkLHCOIXeMJsEwys/fDWp0jYqlHA6gp7HVTc/JmDvs=
 github.com/dohernandez/servers v0.12.1 h1:5yLnSJcReyYCRiodOtBztwXYsahbsPgZBqQw6Pq4abI=
@@ -230,6 +238,8 @@ github.com/gorilla/websocket v1.4.2/go.mod h1:YR8l580nyteQvAITg2hZ9XVh4b55+EU/ad
 github.com/grpc-ecosystem/go-grpc-middleware v1.0.0/go.mod h1:FiyG127CGDf3tlThmgyCl78X/SZQqEOJBCDaAfeWzPs=
 github.com/grpc-ecosystem/go-grpc-middleware/v2 v2.1.0 h1:pRhl55Yx1eC7BZ1N+BBWwnKaMyD8uC+34TLdndZMAKk=
 github.com/grpc-ecosystem/go-grpc-middleware/v2 v2.1.0/go.mod h1:XKMd7iuf/RGPSMJ/U4HP0zS2Z9Fh8Ps9a+6X26m/tmI=
+github.com/grpc-ecosystem/go-grpc-middleware/v2 v2.2.0 h1:kQ0NI7W1B3HwiN5gAYtY+XFItDPbLBwYRxAqbFTyDes=
+github.com/grpc-ecosystem/go-grpc-middleware/v2 v2.2.0/go.mod h1:zrT2dxOAjNFPRGjTUe2Xmb4q4YdUwVvQFV6xiCSf+z0=
 github.com/grpc-ecosystem/go-grpc-prometheus v1.2.0 h1:Ovs26xHkKqVztRpIrF/92BcuyuQ/YW4NSIpoGtfXNho=
 github.com/grpc-ecosystem/go-grpc-prometheus v1.2.0/go.mod h1:8NvIoxWQoOIhqOTXgfV/d3M/q6VIi02HzZEHgUlZvzk=
 github.com/grpc-ecosystem/grpc-gateway v1.9.0/go.mod h1:vNeuVxBJEsws4ogUvrchl83t/GYV9WGTSLVdBhOQFDY=
@@ -481,6 +491,8 @@ github.com/valyala/bytebufferpool v1.0.0 h1:GqA5TC/0021Y/b9FG4Oi9Mr3q7XYx6Kllzaw
 github.com/valyala/bytebufferpool v1.0.0/go.mod h1:6bBcMArwyJ5K/AmCkWv1jt77kVWyCJ6HpOuEn7z0Csc=
 github.com/valyala/fasthttp v1.57.0 h1:Xw8SjWGEP/+wAAgyy5XTvgrWlOD1+TxbbvNADYCm1Tg=
 github.com/valyala/fasthttp v1.57.0/go.mod h1:h6ZBaPRlzpZ6O3H5t2gEk1Qi33+TmLvfwgLLp0t9CpE=
+github.com/valyala/fasthttp v1.58.0 h1:GGB2dWxSbEprU9j0iMJHgdKYJVDyjrOwF9RE59PbRuE=
+github.com/valyala/fasthttp v1.58.0/go.mod h1:SYXvHHaFp7QZHGKSHmoMipInhrI5StHrhDTYVEjK/Kw=
 github.com/vearutop/dynhist-go v1.2.3 h1:EIMWszSDm6b7zmqySgx8zW2qNctE3IXUJggGlDFwJBE=
 github.com/vearutop/dynhist-go v1.2.3/go.mod h1:liiiYiwAi8ixC3DbkxooEhASTF6ysJSXy+piCrBtxEg=
 github.com/xiang90/probing v0.0.0-20190116061207-43a291ad63a2/go.mod h1:UETIi67q53MR2AWcXfiuqkDkRtnGDLqkBTpCHuJHxtU=
