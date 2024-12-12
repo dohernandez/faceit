@@ -1,6 +1,19 @@
 services:
   app:
     build:
+      context: .
       dockerfile: Dockerfile.development
     image: faceit-app-dev
     container_name: faceit-app-dev
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+      - "8080:8080"
+      - "8010:8010"
+    volumes:
+      - .:/go/src/github.com/dohernandez/faceit
+      - /tmp/go-build:/root/.cache/go-build
+    depends_on:
+      database:
+        condition: service_healthy
