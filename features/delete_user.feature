@@ -24,7 +24,7 @@ Feature: Delete user
     """
     {
       "code": 400,
-      "message": "Bad Request",
+      "message": "validation error",
       "error": "<ignore-diff>",
       "details": [
           {"field": "id", "description": "value must be a valid UUID"}

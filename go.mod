@@ -8,11 +8,11 @@ require (
 	github.com/bool64/ctxd v1.2.1
 	github.com/bool64/dev v0.2.37
 	github.com/bool64/sqluct v0.2.4
-	github.com/bufbuild/protovalidate-go v0.7.3
+	github.com/bufbuild/protovalidate-go v0.8.0
 	github.com/cucumber/godog v0.15.0
 	github.com/dohernandez/dev-grpc v0.6.0
-	github.com/dohernandez/go-grpc-service v0.0.0-20241212223738-0a0c3846d5cc
-	github.com/dohernandez/servers v0.12.1
+	github.com/dohernandez/go-grpc-service v0.0.0-20241213145837-4fc39776e59c
+	github.com/dohernandez/servers v0.13.5
 	github.com/google/uuid v1.6.0
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.24.0
 	github.com/jackc/pgconn v1.14.3
@@ -20,7 +20,7 @@ require (
 	github.com/jmoiron/sqlx v1.4.0
 	github.com/stretchr/testify v1.10.0
 	google.golang.org/genproto/googleapis/api v0.0.0-20241206012308-a4fef0638583
-	google.golang.org/grpc v1.68.1
+	google.golang.org/grpc v1.69.0
 	google.golang.org/protobuf v1.35.2
 )
 

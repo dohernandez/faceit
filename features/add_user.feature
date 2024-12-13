@@ -77,7 +77,7 @@ Feature: Add new user
     """
     {
       "code": 400,
-      "message": "Bad Request",
+      "message": "validation error",
       "error": "<ignore-diff>",
       "details": [
           {"field": "first_name", "description": "must not be empty"},
