@@ -87,12 +87,12 @@ check-envfile:
 dc-up-dev: check-envfile
 	@echo "Starting docker compose for development."
 	@DOCKER_COMPOSE_PROFILE=app  \
-	DOCKER_COMPOSE_PATH="docker-compose.yml docker-compose.app.yml docker-compose.dev.yml" \
+	DOCKER_COMPOSE_PATH="docker-compose.yml docker-compose.dev.yml" \
 	make dc-up
 
 ## Run docker-compose down for dev profile
 dc-down-dev: check-envfile
 	@echo "Stopping docker compose for development."
 	@DOCKER_COMPOSE_PROFILE=app \
-	DOCKER_COMPOSE_PATH="docker-compose.yml docker-compose.app.yml docker-compose.dev.yml" \
+	DOCKER_COMPOSE_PATH="docker-compose.yml docker-compose.dev.yml" \
 	make dc-down
