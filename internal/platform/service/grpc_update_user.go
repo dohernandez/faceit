@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"errors"
+
 	"github.com/bool64/ctxd"
 	"github.com/bufbuild/protovalidate-go"
 	"github.com/dohernandez/faceit/internal/domain/model"

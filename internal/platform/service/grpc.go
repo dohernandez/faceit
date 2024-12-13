@@ -1,9 +1,10 @@
 package service
 
 import (
-	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	"crypto/sha256"
 	"encoding/hex"
+
+	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	"github.com/bool64/ctxd"
 	"github.com/bufbuild/protovalidate-go"
 	api "github.com/dohernandez/faceit/internal/platform/service/pb"

@@ -3,13 +3,14 @@ package service
 import (
 	"context"
 	"fmt"
+	"strconv"
+
 	"github.com/bool64/ctxd"
 	"github.com/bufbuild/protovalidate-go"
 	"github.com/dohernandez/faceit/internal/domain/model"
 	api "github.com/dohernandez/faceit/internal/platform/service/pb"
 	"github.com/dohernandez/servers"
 	"google.golang.org/grpc/codes"
-	"strconv"
 )
 
 // defaultLimit is the default limit for the list users by country. This number corresponds default page size defined

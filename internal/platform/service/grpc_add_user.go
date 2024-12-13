@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"errors"
+
 	"github.com/bufbuild/protovalidate-go"
 	"github.com/dohernandez/faceit/internal/domain/model"
 	api "github.com/dohernandez/faceit/internal/platform/service/pb"
