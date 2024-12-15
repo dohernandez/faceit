@@ -32,5 +32,13 @@ COPY --from=builder --chown=faceit:faceit /go/src/github.com/dohernandez/faceit/
 COPY --from=builder --chown=faceit:faceit /go/src/github.com/dohernandez/faceit/resources/migrations /resources/migrations
 COPY --from=builder --chown=faceit:faceit /bin/migrate /bin/migrate
 
-EXPOSE 8000 8080 8010
+# Expose the grpc port
+EXPOSE 8000
+# Expose the rest port
+EXPOSE 8080
+# Expose the metrics port
+EXPOSE 8010
+# Expose the health port
+EXPOSE 8001
+
 ENTRYPOINT ["faceit"]

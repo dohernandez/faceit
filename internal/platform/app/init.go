@@ -57,34 +57,13 @@ func NewServiceLocator(cfg *config.Config, opts ...sapp.Option) (*Locator, error
 
 	l.FaceitService = service.NewFaceitService(l)
 
-	err = l.setupServices()
+	// Setup services with health check
+	err = l.SetupServices(l.FaceitService, swagger.SwgJSON, servers.WithHealthCheck(l.withHealthChecks()...))
 	if err != nil {
 		return nil, err
 	}
 
 	return l, nil
-}
-
-func (l *Locator) setupServices() error {
-	l.InitGRPCService(
-		servers.WithRegisterService(l.FaceitService),
-	)
-
-	err := l.InitGRPCRestService(
-		servers.WithRegisterServiceHandler(l.FaceitService),
-		servers.WithDocEndpoint(l.cfg.ServiceName,
-			"/docs/",
-			"/docs/service.swagger.json",
-			swagger.SwgJSON),
-		servers.WithVersionEndpoint(),
-	)
-	if err != nil {
-		return err
-	}
-
-	l.InitMetricsService(servers.WithGRPCServer(l.GRPCService))
-
-	return nil
 }
 
 // setupStorage sets up storage dependencies (platform).

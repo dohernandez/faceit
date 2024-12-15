@@ -46,6 +46,9 @@ func TestIntegration(t *testing.T) {
 	restTListener, err := net.Listen("tcp", fmt.Sprintf(":%d", cfg.AppRESTPort))
 	must.NotFail(ctxd.WrapError(ctx, err, "failed to init REST service listener"))
 
+	healthListener, err := net.Listen("tcp", fmt.Sprintf(":%d", cfg.AppHealthPort))
+	must.NotFail(ctxd.WrapError(ctx, err, "failed to init health service listener"))
+
 	// initialize locator
 	deps, err := app.NewServiceLocator(
 		&cfg,
@@ -55,6 +58,10 @@ func TestIntegration(t *testing.T) {
 		sapp.WithGRPCRest(
 			servers.WithAddrAssigned(),
 			servers.WithListener(restTListener, true),
+		),
+		sapp.WithHealthCheck(
+			servers.WithAddrAssigned(),
+			servers.WithListener(healthListener, true),
 		),
 	)
 	must.NotFail(ctxd.WrapError(ctx, err, "failed to init service locator"))
