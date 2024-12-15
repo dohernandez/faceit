@@ -1,16 +1,20 @@
 # Faceit Architecture
 
-* Latest update: 2021-11-19
+* Latest update: 2024-12-15
 
 <!-- Short description of the service -->
 
 ## Overview
 
-![](./resources/architecture/ARCHITECTURE-overview.jpeg)
+![](./resources/architecture/ARCHITECTURE-overview.png)
 
 ### Storage
 
-The service makes use of its own private **PostgreSQL** database essentially to store the data necessary for the service to work, like ... .
+The service makes use of its own private **PostgreSQL** database essentially to store the data necessary for the service to work, like user information.
+
+### Notifier
+
+The service uses **NoOp** notifier mock.
 
 ## Package Structure
 
@@ -19,19 +23,20 @@ The service makes use of its own private **PostgreSQL** database essentially to 
 ├── cmd # contains application executable.
 ├── internal # contains application specific non-reusable by any other projects code
 │   ├── domain # contains domain layer definitions.
-│   │   ├── models # contains application's models.
-│   │   ├── usecase # contains application's use cases.
+│   │   ├── [model](internal/domain/model) # contains application's models.
+│   │   ├── [usecase](internal/domain/usecase) # contains application's use cases.
 │   ├── platform
-|   │   ├── app # initializes the application locator.
-│   │   ├── config # contains application configuration.
-│   │   ├── service # contains grpc service implementations.
-│   |   ├── storage # contains usecase storage implementations.
+|   │   ├── [app](internal/platform/app) # initializes the application locator.
+│   │   ├── [config](internal/platform/config) # contains application configuration.
+│   │   ├── [notifier](internal/platform/notifier) # contains application configuration.
+│   │   ├── [service](internal/platform/service) # contains grpc service implementations.
+│   |   ├── [storage](internal/platform/storage) # contains usecase storage implementations.
 ├── resources # RECOMMENDED service resources. Shell helper scripts, additional files required for development, documentations.
-|   |── adr # contains architecture decision records.
-|   |── architecture # contains architecture diagrams and any other design documents or images.
-|	|── migrations # contains sql migration files for the database.
-|	|── proto # contains proto definition of the service.
-|	|── swagger # contains api documentation.
+|   |── [adr](resources/adr) # contains architecture decision records.
+|   |── [architecture](resources/architecture) # contains architecture diagrams and any other design documents or images.
+|	|── [migrations](resources/migrations) # contains sql migration files for the database.
+|	|── [proto](resources/proto) # contains proto definition of the service.
+|	|── [swagger](resources/swagger) # contains api documentation.
 ```
 
 `cmd/`
