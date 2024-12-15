@@ -4,6 +4,31 @@
 
 Small microservice to manage Users.
 
+> [!NOTE]
+> **For reviewers**
+> 
+> The service uses gRPC with gRPC Gateway for REST API. The service is built using the [kit-template](https://github.com/dohernandez/kit-template) template to provide a consistent structure and development experience, focusing on the business logic ([internal](./internal)) and not on the boilerplate code.
+> 
+> To test the service, first run the service locally:
+>```makefile
+>make dc-up-dev
+>```
+> If the `.env` file is not created yet, the command will fail and will ask you to generate the `.env` file. You can generate the `.env` file by running the following command:
+> ```makefile
+>make envfile
+>```
+> If you want to enable rate limiter to the server, uncomment the `Rate Limiter` configuration in the `.env` file. Rate limiting is base on client.
+> 
+> Once the service is up and running you can test the service using the REST API documentation. The documentation is available at http://localhost:8080/docs (using the default REST port definition).
+> 
+> The service also exposes metrics on http://localhost:8010/metrics and health check on http://localhost:8001/health.
+>
+> If you want to test the service using gRPC, you can use the [Evans](#evans) on http://localhost:8000 (using the default gRPC port definition).
+> 
+> To understand the service architecture, please refer to the [ARCHITECTURE.md](./ARCHITECTURE.md) document.
+> 
+> To expand the knowledge of the service, please refer to the [Table of Contents](#table-of-contents).
+
 ## Table of Contents
 - [Table of Contents](#table-of-contents)
 - [Overview](#overview)
@@ -12,7 +37,9 @@ Small microservice to manage Users.
     - [Development](#development)
         - [Running the service locally](#running-the-service-locally)
         - [Generate code from proto file](#generate-code-from-proto-file)
+        - [Add a new endpoint](#add-a-new-endpoint)
     - [Testing](#testing)
+    - [Benchmark](#benchmark)
     - [Metrics](#metrics)
     - [Migrations](#migrations)
 - [Enhancement](#enhancement)
@@ -84,6 +111,12 @@ The Go files generated based on the command can be found `internal/platform/serv
 
 [[table of contents]](#table-of-contents)
 
+#### Add a new endpoint
+
+To add a new endpoint to the service, follow the steps described in the [how-to-add-endpoint.md](./resources/architecture/how-to-add-endpoint.md) document.
+
+[[table of contents]](#table-of-contents)
+
 ### Testing
 
 The server follows unit testing and behavior testing. Testing make sure the logic of the application is sounds.
@@ -101,6 +134,24 @@ make lint
 ``` 
 
 to make sure your changes follow our coding standards.
+
+[[table of contents]](#table-of-contents)
+
+## Benchmark
+
+Benchmarks results are stored in the root directory.
+
+For running benchmarks and compare with previous do:
+
+```bash
+make bench
+```
+
+This will run the benchmarks and compare the results with the base file `bench-<git-branch>.txt`.
+
+**Note:**
+
+When ever you wanna update the base file, rename the current (output at the end of the command `Benchmark result saved in bench-<git-branch>.txt`) to `bench-main.txt` and run the benchmarks again.
 
 [[table of contents]](#table-of-contents)
 
@@ -174,9 +225,10 @@ If you run the above command from outside to docker network, make sure to have `
 
 ### Enhancement
 
-* [Enhancement 1]
-* [Enhancement 2]
-* [Enhancement 3]
+* Add security to the server by requiring a token to access the server.
+* Add outbox pattern for notifying events.
+* Add caching layer for the list by country.
+* Expand rate limiter to server scope (so far is base on client).
 
 [[table of contents]](#table-of-contents)
 
