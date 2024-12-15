@@ -32,6 +32,9 @@ func main() {
 	grpcListener, err := net.Listen("tcp", fmt.Sprintf(":%d", cfg.AppGRPCPort))
 	must.NotFail(ctxd.WrapError(ctx, err, "failed to init GRPC service listener"))
 
+	healthListener, err := net.Listen("tcp", fmt.Sprintf(":%d", cfg.AppHealthPort))
+	must.NotFail(ctxd.WrapError(ctx, err, "failed to init health service listener"))
+
 	optReflection := func(any) {}
 
 	if cfg.IsDev() {
@@ -53,6 +56,9 @@ func main() {
 		),
 		sapp.WithMetrics(
 			servers.WithListener(metricsListener, true),
+		),
+		sapp.WithHealthCheck(
+			servers.WithListener(healthListener, true),
 		),
 	)
 	must.NotFail(ctxd.WrapError(ctx, err, "failed to init locator"))

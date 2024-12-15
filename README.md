@@ -1,15 +1,8 @@
 # faceit
 
 [![Build Status](https://github.com/dohernandez/faceit/workflows/test-unit/badge.svg)](https://github.com/dohernandez/faceit/actions?query=branch%3Amaster+workflow%3Atest-unit)
-[![Coverage Status](https://codecov.io/gh/dohernandez/faceit/branch/master/graph/badge.svg)](https://codecov.io/gh/dohernandez/faceit)
-[![GoDevDoc](https://img.shields.io/badge/dev-doc-00ADD8?logo=go)](https://pkg.go.dev/github.com/dohernandez/faceit)
-![Code lines](https://sloc.xyz/github/dohernandez/faceit/?category=code)
-![Comments](https://sloc.xyz/github/dohernandez/faceit/?category=comments)
 
-- Bugs
-- Non determinism integration tests when it has paylaod such as {... details: { ... } } due to a bug in the library used to compare jsons.
-
-<!-- Short description of the service -->
+Small microservice to manage Users.
 
 ## Table of Contents
 - [Table of Contents](#table-of-contents)
